@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Application\DTO;
 
+use Codevenom\FakturowniaBundle\Domain\Enum\DocumentType;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\InvoiceId;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
 
@@ -13,6 +14,7 @@ final readonly class InvoiceDto
         public ?InvoiceId $id,
         public ?string $number,
         public ?string $currency,
+        public DocumentType $documentType,
         public KeyValuePayload $payload,
     ) {
     }

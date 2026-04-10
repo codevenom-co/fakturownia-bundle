@@ -12,6 +12,8 @@ use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
 use Codevenom\FakturowniaBundle\Application\Query\GetInvoiceQuery;
 use Codevenom\FakturowniaBundle\Application\Query\ListClientsQuery;
 use Codevenom\FakturowniaBundle\Application\Query\ListInvoicesQuery;
+use Codevenom\FakturowniaBundle\Domain\Enum\DocumentType;
+use Codevenom\FakturowniaBundle\Domain\Strategy\PaymentStateResolver;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\ClientId;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\InvoiceId;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
@@ -19,6 +21,10 @@ use Codevenom\FakturowniaBundle\Domain\ValueObject\Money;
 
 final class FakturowniaDtoMapper
 {
+    public function __construct(private readonly PaymentStateResolver $paymentStateResolver)
+    {
+    }
+
     public function mapListInvoicesQueryToFilters(ListInvoicesQuery $query): array
     {
         return array_filter([
@@ -55,11 +61,14 @@ final class FakturowniaDtoMapper
 
     public function mapInvoice(array $payload): InvoiceDto
     {
+        $documentType = DocumentType::fromApiPayload($payload);
+
         return new InvoiceDto(
             isset($payload['id']) ? InvoiceId::fromIntOrString((string) $payload['id']) : null,
             isset($payload['number']) ? (string) $payload['number'] : null,
             isset($payload['currency']) ? (string) $payload['currency'] : null,
-            KeyValuePayload::fromArray($payload),
+            $documentType,
+            KeyValuePayload::fromArray(array_merge($payload, ['document_type' => $documentType->value])),
         );
     }
 
@@ -93,6 +102,7 @@ final class FakturowniaDtoMapper
         $currency = isset($payload['currency']) ? (string) $payload['currency'] : null;
         $totalGross = $this->mapMoney($payload['total_gross'] ?? null, $currency);
         $leftToPay = $this->mapMoney($payload['left_to_pay'] ?? null, $currency);
+        $paymentState = $this->paymentStateResolver->resolve($payload);
 
         return new PaymentStatusDto(
             isset($payload['invoice_id']) ? InvoiceId::fromIntOrString((string) $payload['invoice_id']) : null,
@@ -103,9 +113,9 @@ final class FakturowniaDtoMapper
             isset($payload['paid_flag']) ? (bool) $payload['paid_flag'] : null,
             isset($payload['payment_to']) ? (string) $payload['payment_to'] : null,
             isset($payload['paid_date']) ? (string) $payload['paid_date'] : null,
-            isset($payload['payment_state']) ? (string) $payload['payment_state'] : 'unknown',
+            $paymentState,
             isset($payload['connected_payments_count']) ? (int) $payload['connected_payments_count'] : 0,
-            KeyValuePayload::fromArray($payload),
+            KeyValuePayload::fromArray(array_merge($payload, ['payment_state' => $paymentState->value])),
         );
     }
 

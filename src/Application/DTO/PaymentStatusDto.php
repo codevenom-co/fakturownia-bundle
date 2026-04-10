@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Application\DTO;
 
+use Codevenom\FakturowniaBundle\Domain\Enum\PaymentState;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\InvoiceId;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\Money;
@@ -19,7 +20,7 @@ final readonly class PaymentStatusDto
         public ?bool $paidFlag,
         public ?string $paymentTo,
         public ?string $paidDate,
-        public string $paymentState,
+        public PaymentState $paymentState,
         public int $connectedPaymentsCount,
         public KeyValuePayload $payload,
     ) {
