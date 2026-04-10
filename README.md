@@ -1,4 +1,9 @@
 # codevenom/fakturownia-bundle
+<p align="center">
+  <a href="https://github.com/codevenom-co/fakturownia-bundle">
+    <img src="./docs/github-banner.svg" alt="CODEVENOM Fakturownia Bundle - Symfony package with MCP tools" width="100%" />
+  </a>
+</p>
 
 Symfony bundle for the Fakturownia API with built-in MCP tools.
 

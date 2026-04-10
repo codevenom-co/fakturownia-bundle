@@ -1,0 +1,80 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">CODEVENOM Fakturownia Bundle</title>
+  <desc id="desc">Marketing banner presenting CODEVENOM Fakturownia Bundle with MCP tools for AI agents.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#060E22"/>
+      <stop offset="1" stop-color="#0D1A39"/>
+    </linearGradient>
+
+    <linearGradient id="glow" x1="180" y1="120" x2="1180" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6AD55" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#F6AD55" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.04"/>
+    </linearGradient>
+
+    <filter id="shadow" x="0" y="0" width="1400" height="760" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="14" stdDeviation="24" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="640" rx="28" fill="url(#bg)"/>
+
+  <ellipse cx="1100" cy="80" rx="320" ry="180" fill="url(#glow)"/>
+  <ellipse cx="260" cy="620" rx="380" ry="180" fill="#F6AD55" fill-opacity="0.10"/>
+
+  <g opacity="0.35">
+    <circle cx="1000" cy="500" r="210" stroke="#E2E8F0" stroke-opacity="0.22" stroke-width="1.5"/>
+    <circle cx="1000" cy="500" r="150" stroke="#E2E8F0" stroke-opacity="0.20" stroke-width="1.5"/>
+    <circle cx="1000" cy="500" r="90" stroke="#E2E8F0" stroke-opacity="0.18" stroke-width="1.5"/>
+  </g>
+
+  <rect x="68" y="58" width="1144" height="524" rx="28" fill="url(#card)" stroke="#E2E8F0" stroke-opacity="0.30"/>
+
+  <text x="110" y="130" fill="#F6AD55" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="2.2">CODEVENOM</text>
+
+  <text x="110" y="214" fill="#FFFFFF" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="62" font-weight="800">Fakturownia Bundle</text>
+
+  <text x="110" y="262" fill="#E2E8F0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="600">Symfony package + built-in MCP tools</text>
+
+  <text x="110" y="320" fill="#FFFFFF" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="500">Connect invoicing workflows to Codex, Claude, Cursor and more.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="110" y="366" width="328" height="66" rx="14" fill="#F6AD55"/>
+    <text x="141" y="407" fill="#060E22" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="800">Install via Composer</text>
+  </g>
+
+  <rect x="460" y="366" width="354" height="66" rx="14" fill="none" stroke="#E2E8F0" stroke-width="2" stroke-opacity="0.82"/>
+  <text x="490" y="407" fill="#FFFFFF" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="700">Expose tools over MCP</text>
+
+  <g transform="translate(860 180)">
+    <rect x="0" y="0" width="300" height="300" rx="24" fill="#FFFFFF" fill-opacity="0.08" stroke="#E2E8F0" stroke-opacity="0.35"/>
+
+    <rect x="34" y="38" width="114" height="134" rx="12" fill="#FFFFFF" fill-opacity="0.96"/>
+    <rect x="48" y="57" width="86" height="10" rx="5" fill="#E2E8F0"/>
+    <rect x="48" y="77" width="62" height="8" rx="4" fill="#E2E8F0"/>
+    <rect x="48" y="95" width="78" height="8" rx="4" fill="#E2E8F0"/>
+    <rect x="48" y="122" width="68" height="30" rx="7" fill="#F6AD55"/>
+
+    <rect x="170" y="38" width="96" height="64" rx="12" fill="#060E22" stroke="#E2E8F0" stroke-opacity="0.35"/>
+    <text x="184" y="79" fill="#F6AD55" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="700">MCP</text>
+
+    <circle cx="112" cy="224" r="28" fill="#F6AD55"/>
+    <circle cx="216" cy="224" r="28" fill="#FFFFFF" fill-opacity="0.95"/>
+    <circle cx="164" cy="272" r="22" fill="#E2E8F0"/>
+
+    <path d="M140 224H188" stroke="#E2E8F0" stroke-width="4" stroke-linecap="round"/>
+    <path d="M118 245L150 267" stroke="#E2E8F0" stroke-width="4" stroke-linecap="round"/>
+    <path d="M210 245L178 267" stroke="#E2E8F0" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <text x="110" y="526" fill="#E2E8F0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="500">Open-source by CODEVENOM</text>
+
+  <rect x="964" y="510" width="196" height="40" rx="20" fill="#060E22" stroke="#E2E8F0" stroke-opacity="0.35"/>
+  <text x="988" y="536" fill="#FFFFFF" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="700">codevenom.co</text>
+</svg>
