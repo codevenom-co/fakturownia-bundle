@@ -4,7 +4,16 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Mcp;
 
+use Codevenom\FakturowniaBundle\Application\Command\CreateClientCommand;
+use Codevenom\FakturowniaBundle\Application\Command\CreateInvoiceCommand;
+use Codevenom\FakturowniaBundle\Application\Query\GetInvoicePaymentStatusQuery;
+use Codevenom\FakturowniaBundle\Application\Query\GetInvoiceQuery;
+use Codevenom\FakturowniaBundle\Application\Query\ListClientsQuery;
+use Codevenom\FakturowniaBundle\Application\Query\ListInvoicesQuery;
 use Codevenom\FakturowniaBundle\Domain\Contract\FakturowniaInterface;
+use Codevenom\FakturowniaBundle\Domain\ValueObject\ClientId;
+use Codevenom\FakturowniaBundle\Domain\ValueObject\InvoiceId;
+use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
 use Mcp\Capability\Attribute\McpTool;
 
 final class FakturowniaMcpTools
@@ -27,37 +36,42 @@ final class FakturowniaMcpTools
         ?string $dateTo = null,
         ?string $searchDateType = null,
     ): array {
-        return $this->fakturownia->listInvoices(array_filter([
-            'page' => $page,
-            'per_page' => $perPage,
-            'period' => $period,
-            'include_positions' => $includePositions,
-            'client_id' => $clientId,
-            'number' => $number,
-            'order' => $order,
-            'income' => $income,
-            'date_from' => $dateFrom,
-            'date_to' => $dateTo,
-            'search_date_type' => $searchDateType,
-        ], static fn (mixed $value): bool => null !== $value));
+        $result = $this->fakturownia->listInvoices(new ListInvoicesQuery(
+            page: $page,
+            perPage: $perPage,
+            period: $period,
+            includePositions: $includePositions,
+            clientId: null !== $clientId ? ClientId::fromIntOrString($clientId) : null,
+            number: $number,
+            order: $order,
+            income: $income,
+            dateFrom: $dateFrom,
+            dateTo: $dateTo,
+            searchDateType: $searchDateType,
+        ));
+
+        return $result->toArray();
     }
 
     #[McpTool(name: 'get_invoice')]
     public function getInvoice(int|string $invoiceId, ?bool $includePositions = null): array
     {
-        $filters = [];
+        $result = $this->fakturownia->getInvoice(new GetInvoiceQuery(
+            invoiceId: InvoiceId::fromIntOrString($invoiceId),
+            includePositions: $includePositions,
+        ));
 
-        if (null !== $includePositions) {
-            $filters['include_positions'] = $includePositions;
-        }
-
-        return $this->fakturownia->getInvoice($invoiceId, $filters);
+        return $result->toArray();
     }
 
     #[McpTool(name: 'create_invoice')]
     public function createInvoice(array $invoice): array
     {
-        return $this->fakturownia->createInvoice($invoice);
+        $result = $this->fakturownia->createInvoice(
+            new CreateInvoiceCommand(KeyValuePayload::fromArray($invoice)),
+        );
+
+        return $result->toArray();
     }
 
     #[McpTool(name: 'list_clients')]
@@ -67,23 +81,33 @@ final class FakturowniaMcpTools
         ?string $query = null,
         int|string|null $externalId = null,
     ): array {
-        return $this->fakturownia->listClients(array_filter([
-            'page' => $page,
-            'per_page' => $perPage,
-            'query' => $query,
-            'external_id' => $externalId,
-        ], static fn (mixed $value): bool => null !== $value));
+        $result = $this->fakturownia->listClients(new ListClientsQuery(
+            page: $page,
+            perPage: $perPage,
+            query: $query,
+            externalId: null !== $externalId ? ClientId::fromIntOrString($externalId) : null,
+        ));
+
+        return $result->toArray();
     }
 
     #[McpTool(name: 'create_client')]
     public function createClient(array $client): array
     {
-        return $this->fakturownia->createClient($client);
+        $result = $this->fakturownia->createClient(
+            new CreateClientCommand(KeyValuePayload::fromArray($client)),
+        );
+
+        return $result->toArray();
     }
 
     #[McpTool(name: 'invoice_payment_status')]
     public function invoicePaymentStatus(int|string $invoiceId): array
     {
-        return $this->fakturownia->invoicePaymentStatus($invoiceId);
+        $result = $this->fakturownia->getInvoicePaymentStatus(
+            new GetInvoicePaymentStatusQuery(InvoiceId::fromIntOrString($invoiceId)),
+        );
+
+        return $result->toArray();
     }
 }

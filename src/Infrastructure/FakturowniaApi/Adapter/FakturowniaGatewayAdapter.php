@@ -4,42 +4,72 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter;
 
+use Codevenom\FakturowniaBundle\Application\Command\CreateClientCommand;
+use Codevenom\FakturowniaBundle\Application\Command\CreateInvoiceCommand;
+use Codevenom\FakturowniaBundle\Application\DTO\ClientDto;
+use Codevenom\FakturowniaBundle\Application\DTO\ClientListDto;
+use Codevenom\FakturowniaBundle\Application\DTO\InvoiceDto;
+use Codevenom\FakturowniaBundle\Application\DTO\InvoiceListDto;
+use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
+use Codevenom\FakturowniaBundle\Application\Query\GetInvoicePaymentStatusQuery;
+use Codevenom\FakturowniaBundle\Application\Query\GetInvoiceQuery;
+use Codevenom\FakturowniaBundle\Application\Query\ListClientsQuery;
+use Codevenom\FakturowniaBundle\Application\Query\ListInvoicesQuery;
 use Codevenom\FakturowniaBundle\Domain\Contract\Port\FakturowniaGatewayInterface;
 use Codevenom\FakturowniaBundle\Http\FakturowniaClient;
+use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Mapper\FakturowniaDtoMapper;
 
 final class FakturowniaGatewayAdapter implements FakturowniaGatewayInterface
 {
-    public function __construct(private readonly FakturowniaClient $client)
+    public function __construct(
+        private readonly FakturowniaClient $client,
+        private readonly FakturowniaDtoMapper $mapper,
+    )
     {
     }
 
-    public function listInvoices(array $filters = []): array
+    public function listInvoices(ListInvoicesQuery $query): InvoiceListDto
     {
-        return $this->client->listInvoices($filters);
+        $response = $this->client->listInvoices($this->mapper->mapListInvoicesQueryToFilters($query));
+
+        return $this->mapper->mapInvoiceList($response);
     }
 
-    public function getInvoice(int|string $invoiceId, array $filters = []): array
+    public function getInvoice(GetInvoiceQuery $query): InvoiceDto
     {
-        return $this->client->getInvoice($invoiceId, $filters);
+        $response = $this->client->getInvoice(
+            $query->invoiceId->value,
+            $this->mapper->mapGetInvoiceQueryToFilters($query),
+        );
+
+        return $this->mapper->mapInvoice($response);
     }
 
-    public function createInvoice(array $invoice): array
+    public function createInvoice(CreateInvoiceCommand $command): InvoiceDto
     {
-        return $this->client->createInvoice($invoice);
+        $response = $this->client->createInvoice($command->invoice->toArray());
+
+        return $this->mapper->mapInvoice($response);
     }
 
-    public function listClients(array $filters = []): array
+    public function listClients(ListClientsQuery $query): ClientListDto
     {
-        return $this->client->listClients($filters);
+        $response = $this->client->listClients($this->mapper->mapListClientsQueryToFilters($query));
+
+        return $this->mapper->mapClientList($response);
     }
 
-    public function createClient(array $client): array
+    public function createClient(CreateClientCommand $command): ClientDto
     {
-        return $this->client->createClient($client);
+        $response = $this->client->createClient($command->client->toArray());
+
+        return $this->mapper->mapClient($response);
     }
 
-    public function invoicePaymentStatus(int|string $invoiceId): array
+    public function getInvoicePaymentStatus(GetInvoicePaymentStatusQuery $query): PaymentStatusDto
     {
-        return $this->client->invoicePaymentStatus($invoiceId);
+        $response = $this->client->invoicePaymentStatus($query->invoiceId->value);
+
+        return $this->mapper->mapPaymentStatus($response);
     }
 }
