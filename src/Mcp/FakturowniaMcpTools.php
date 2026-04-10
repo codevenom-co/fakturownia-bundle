@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Mcp;
 
-use Codevenom\FakturowniaBundle\Http\FakturowniaClient;
+use Codevenom\FakturowniaBundle\Domain\Contract\FakturowniaInterface;
 use Mcp\Capability\Attribute\McpTool;
 
 final class FakturowniaMcpTools
 {
-    public function __construct(private readonly FakturowniaClient $client)
+    public function __construct(private readonly FakturowniaInterface $fakturownia)
     {
     }
 
@@ -27,7 +27,7 @@ final class FakturowniaMcpTools
         ?string $dateTo = null,
         ?string $searchDateType = null,
     ): array {
-        return $this->client->listInvoices(array_filter([
+        return $this->fakturownia->listInvoices(array_filter([
             'page' => $page,
             'per_page' => $perPage,
             'period' => $period,
@@ -51,13 +51,13 @@ final class FakturowniaMcpTools
             $filters['include_positions'] = $includePositions;
         }
 
-        return $this->client->getInvoice($invoiceId, $filters);
+        return $this->fakturownia->getInvoice($invoiceId, $filters);
     }
 
     #[McpTool(name: 'create_invoice')]
     public function createInvoice(array $invoice): array
     {
-        return $this->client->createInvoice($invoice);
+        return $this->fakturownia->createInvoice($invoice);
     }
 
     #[McpTool(name: 'list_clients')]
@@ -67,7 +67,7 @@ final class FakturowniaMcpTools
         ?string $query = null,
         int|string|null $externalId = null,
     ): array {
-        return $this->client->listClients(array_filter([
+        return $this->fakturownia->listClients(array_filter([
             'page' => $page,
             'per_page' => $perPage,
             'query' => $query,
@@ -78,12 +78,12 @@ final class FakturowniaMcpTools
     #[McpTool(name: 'create_client')]
     public function createClient(array $client): array
     {
-        return $this->client->createClient($client);
+        return $this->fakturownia->createClient($client);
     }
 
     #[McpTool(name: 'invoice_payment_status')]
     public function invoicePaymentStatus(int|string $invoiceId): array
     {
-        return $this->client->invoicePaymentStatus($invoiceId);
+        return $this->fakturownia->invoicePaymentStatus($invoiceId);
     }
 }

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
+use Codevenom\FakturowniaBundle\Application\FakturowniaService;
+use Codevenom\FakturowniaBundle\Domain\Contract\FakturowniaInterface;
+use Codevenom\FakturowniaBundle\Domain\Contract\Port\FakturowniaGatewayInterface;
+use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services()
@@ -19,4 +23,7 @@ return static function (ContainerConfigurator $container): void {
             __DIR__.'/../src/DependencyInjection/',
             __DIR__.'/../src/CodevenomFakturowniaBundle.php',
         ]);
+
+    $services->alias(FakturowniaInterface::class, FakturowniaService::class);
+    $services->alias(FakturowniaGatewayInterface::class, FakturowniaGatewayAdapter::class);
 };
