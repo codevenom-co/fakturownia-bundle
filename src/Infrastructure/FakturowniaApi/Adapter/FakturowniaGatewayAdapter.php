@@ -16,16 +16,15 @@ use Codevenom\FakturowniaBundle\Application\Query\GetInvoiceQuery;
 use Codevenom\FakturowniaBundle\Application\Query\ListClientsQuery;
 use Codevenom\FakturowniaBundle\Application\Query\ListInvoicesQuery;
 use Codevenom\FakturowniaBundle\Domain\Contract\Port\FakturowniaGatewayInterface;
-use Codevenom\FakturowniaBundle\Http\FakturowniaClient;
+use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClientInterface;
 use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Mapper\FakturowniaDtoMapper;
 
 final class FakturowniaGatewayAdapter implements FakturowniaGatewayInterface
 {
     public function __construct(
-        private readonly FakturowniaClient $client,
+        private readonly FakturowniaClientInterface $client,
         private readonly FakturowniaDtoMapper $mapper,
-    )
-    {
+    ) {
     }
 
     public function listInvoices(ListInvoicesQuery $query): InvoiceListDto

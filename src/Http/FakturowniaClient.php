@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Http;
 
-use Codevenom\FakturowniaBundle\Exception\ApiException;
+use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Exception\ApiResponseException;
+use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Exception\ApiTransportException;
+use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Exception\ApiValidationException;
+use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClientInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class FakturowniaClient
+final class FakturowniaClient implements FakturowniaClientInterface
 {
     public function __construct(
         private readonly HttpClientInterface $httpClient,
@@ -26,7 +29,7 @@ final class FakturowniaClient
     public function getInvoice(int|string $invoiceId, array $filters = []): array
     {
         if ('' === (string) $invoiceId) {
-            throw new ApiException('invoiceId jest wymagane.');
+            throw new ApiValidationException('invoiceId jest wymagane.');
         }
 
         return $this->request('GET', sprintf('/invoices/%s.json', $invoiceId), $filters);
@@ -35,7 +38,7 @@ final class FakturowniaClient
     public function createInvoice(array $invoice): array
     {
         if ([] === $invoice) {
-            throw new ApiException('invoice nie moze byc puste.');
+            throw new ApiValidationException('invoice nie moze byc puste.');
         }
 
         return $this->request('POST', '/invoices.json', [], ['invoice' => $invoice]);
@@ -49,7 +52,7 @@ final class FakturowniaClient
     public function createClient(array $client): array
     {
         if ([] === $client) {
-            throw new ApiException('client nie moze byc pusty.');
+            throw new ApiValidationException('client nie moze byc pusty.');
         }
 
         return $this->request('POST', '/clients.json', [], ['client' => $client]);
@@ -121,11 +124,11 @@ final class FakturowniaClient
             $statusCode = $response->getStatusCode();
             $content = $response->toArray(false);
         } catch (TransportExceptionInterface $e) {
-            throw new ApiException('Blad transportu do Fakturowni: '.$e->getMessage(), 0, [], $e);
+            throw new ApiTransportException('Blad transportu do Fakturowni: '.$e->getMessage(), $e);
         }
 
         if ($statusCode >= 400) {
-            throw new ApiException(
+            throw new ApiResponseException(
                 sprintf('Fakturownia API zwrocilo HTTP %d.', $statusCode),
                 $statusCode,
                 \is_array($content) ? $content : [],

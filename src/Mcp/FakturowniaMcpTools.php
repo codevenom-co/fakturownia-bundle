@@ -4,22 +4,18 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Mcp;
 
-use Codevenom\FakturowniaBundle\Application\Command\CreateClientCommand;
-use Codevenom\FakturowniaBundle\Application\Command\CreateInvoiceCommand;
-use Codevenom\FakturowniaBundle\Application\Query\GetInvoicePaymentStatusQuery;
-use Codevenom\FakturowniaBundle\Application\Query\GetInvoiceQuery;
-use Codevenom\FakturowniaBundle\Application\Query\ListClientsQuery;
-use Codevenom\FakturowniaBundle\Application\Query\ListInvoicesQuery;
 use Codevenom\FakturowniaBundle\Domain\Contract\FakturowniaInterface;
-use Codevenom\FakturowniaBundle\Domain\ValueObject\ClientId;
-use Codevenom\FakturowniaBundle\Domain\ValueObject\InvoiceId;
-use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
+use Codevenom\FakturowniaBundle\Mcp\Mapper\McpInputMapper;
+use Codevenom\FakturowniaBundle\Mcp\Mapper\McpOutputMapper;
 use Mcp\Capability\Attribute\McpTool;
 
 final class FakturowniaMcpTools
 {
-    public function __construct(private readonly FakturowniaInterface $fakturownia)
-    {
+    public function __construct(
+        private readonly FakturowniaInterface $fakturownia,
+        private readonly McpInputMapper $inputMapper,
+        private readonly McpOutputMapper $outputMapper,
+    ) {
     }
 
     #[McpTool(name: 'list_invoices')]
@@ -36,42 +32,41 @@ final class FakturowniaMcpTools
         ?string $dateTo = null,
         ?string $searchDateType = null,
     ): array {
-        $result = $this->fakturownia->listInvoices(new ListInvoicesQuery(
-            page: $page,
-            perPage: $perPage,
-            period: $period,
-            includePositions: $includePositions,
-            clientId: null !== $clientId ? ClientId::fromIntOrString($clientId) : null,
-            number: $number,
-            order: $order,
-            income: $income,
-            dateFrom: $dateFrom,
-            dateTo: $dateTo,
-            searchDateType: $searchDateType,
-        ));
+        $result = $this->fakturownia->listInvoices(
+            $this->inputMapper->mapListInvoices(
+                $page,
+                $perPage,
+                $period,
+                $includePositions,
+                $clientId,
+                $number,
+                $order,
+                $income,
+                $dateFrom,
+                $dateTo,
+                $searchDateType,
+            ),
+        );
 
-        return $result->toArray();
+        return $this->outputMapper->mapInvoiceList($result);
     }
 
     #[McpTool(name: 'get_invoice')]
     public function getInvoice(int|string $invoiceId, ?bool $includePositions = null): array
     {
-        $result = $this->fakturownia->getInvoice(new GetInvoiceQuery(
-            invoiceId: InvoiceId::fromIntOrString($invoiceId),
-            includePositions: $includePositions,
-        ));
+        $result = $this->fakturownia->getInvoice(
+            $this->inputMapper->mapGetInvoice($invoiceId, $includePositions),
+        );
 
-        return $result->toArray();
+        return $this->outputMapper->mapInvoice($result);
     }
 
     #[McpTool(name: 'create_invoice')]
     public function createInvoice(array $invoice): array
     {
-        $result = $this->fakturownia->createInvoice(
-            new CreateInvoiceCommand(KeyValuePayload::fromArray($invoice)),
-        );
+        $result = $this->fakturownia->createInvoice($this->inputMapper->mapCreateInvoice($invoice));
 
-        return $result->toArray();
+        return $this->outputMapper->mapInvoice($result);
     }
 
     #[McpTool(name: 'list_clients')]
@@ -81,33 +76,28 @@ final class FakturowniaMcpTools
         ?string $query = null,
         int|string|null $externalId = null,
     ): array {
-        $result = $this->fakturownia->listClients(new ListClientsQuery(
-            page: $page,
-            perPage: $perPage,
-            query: $query,
-            externalId: null !== $externalId ? ClientId::fromIntOrString($externalId) : null,
-        ));
+        $result = $this->fakturownia->listClients(
+            $this->inputMapper->mapListClients($page, $perPage, $query, $externalId),
+        );
 
-        return $result->toArray();
+        return $this->outputMapper->mapClientList($result);
     }
 
     #[McpTool(name: 'create_client')]
     public function createClient(array $client): array
     {
-        $result = $this->fakturownia->createClient(
-            new CreateClientCommand(KeyValuePayload::fromArray($client)),
-        );
+        $result = $this->fakturownia->createClient($this->inputMapper->mapCreateClient($client));
 
-        return $result->toArray();
+        return $this->outputMapper->mapClient($result);
     }
 
     #[McpTool(name: 'invoice_payment_status')]
     public function invoicePaymentStatus(int|string $invoiceId): array
     {
         $result = $this->fakturownia->getInvoicePaymentStatus(
-            new GetInvoicePaymentStatusQuery(InvoiceId::fromIntOrString($invoiceId)),
+            $this->inputMapper->mapInvoicePaymentStatus($invoiceId),
         );
 
-        return $result->toArray();
+        return $this->outputMapper->mapPaymentStatus($result);
     }
 }

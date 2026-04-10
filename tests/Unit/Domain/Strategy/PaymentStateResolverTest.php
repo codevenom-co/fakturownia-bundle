@@ -22,6 +22,11 @@ final class PaymentStateResolverTest extends TestCase
         self::assertSame(PaymentState::PAID, $this->resolver->resolve(['paid' => true]));
     }
 
+    public function testItResolvesExplicitStateBeforeHeuristics(): void
+    {
+        self::assertSame(PaymentState::PARTIALLY_PAID, $this->resolver->resolve(['payment_state' => 'partially_paid']));
+    }
+
     public function testItResolvesPartiallyPaidState(): void
     {
         self::assertSame(

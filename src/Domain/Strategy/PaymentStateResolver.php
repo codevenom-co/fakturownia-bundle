@@ -11,6 +11,7 @@ final class PaymentStateResolver
     private function strategies(): array
     {
         return [
+            new ExplicitPaymentStateStrategy(),
             new PaidPaymentStateStrategy(),
             new PartiallyPaidPaymentStateStrategy(),
             new UnpaidPaymentStateStrategy(),
