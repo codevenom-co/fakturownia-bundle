@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Tests\Unit\Mcp\Mapper;
 
-use Codevenom\FakturowniaBundle\Application\DTO\ClientDto;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
+use Codevenom\FakturowniaBundle\Application\Dto\Client;
+use Codevenom\FakturowniaBundle\Application\Dto\ClientList;
+use Codevenom\FakturowniaBundle\Application\Dto\Invoice;
+use Codevenom\FakturowniaBundle\Application\Dto\InvoiceList;
+use Codevenom\FakturowniaBundle\Application\Dto\PaymentStatus;
 use Codevenom\FakturowniaBundle\Domain\Enum\DocumentType;
 use Codevenom\FakturowniaBundle\Domain\Enum\PaymentState;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\ClientId;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\InvoiceId;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\Money;
-use Codevenom\FakturowniaBundle\Mcp\Mapper\McpInputMapper;
-use Codevenom\FakturowniaBundle\Mcp\Mapper\McpOutputMapper;
+use Codevenom\FakturowniaBundle\Infrastructure\MCP\Mapper\McpInputMapper;
+use Codevenom\FakturowniaBundle\Infrastructure\MCP\Mapper\McpOutputMapper;
 use PHPUnit\Framework\TestCase;
 
 final class McpMapperTest extends TestCase
@@ -46,11 +46,11 @@ final class McpMapperTest extends TestCase
     public function testOutputMapperReturnsTransportArrays(): void
     {
         $mapper = new McpOutputMapper();
-        $invoiceList = new InvoiceListDto([], KeyValuePayload::fromArray(['invoices' => []]));
-        $invoice = new InvoiceDto(null, 'FV/1', 'PLN', DocumentType::INVOICE, KeyValuePayload::fromArray(['number' => 'FV/1']));
-        $clientList = new ClientListDto([], KeyValuePayload::fromArray(['clients' => []]));
-        $client = new ClientDto(null, 'Acme', KeyValuePayload::fromArray(['name' => 'Acme']));
-        $paymentStatus = new PaymentStatusDto(
+        $invoiceList = new InvoiceList([], KeyValuePayload::fromArray(['invoices' => []]));
+        $invoice = new Invoice(null, 'FV/1', 'PLN', DocumentType::INVOICE, KeyValuePayload::fromArray(['number' => 'FV/1']));
+        $clientList = new ClientList([], KeyValuePayload::fromArray(['clients' => []]));
+        $client = new Client(null, 'Acme', KeyValuePayload::fromArray(['name' => 'Acme']));
+        $paymentStatus = new PaymentStatus(
             InvoiceId::fromIntOrString(1),
             'FV/1',
             'PLN',

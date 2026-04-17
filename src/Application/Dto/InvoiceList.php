@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Codevenom\FakturowniaBundle\Application\DTO;
+namespace Codevenom\FakturowniaBundle\Application\Dto;
 
 use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
 
-final readonly class ClientListDto
+final readonly class InvoiceList
 {
     public function __construct(
         public array $items,

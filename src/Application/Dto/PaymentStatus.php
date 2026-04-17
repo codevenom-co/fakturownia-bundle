@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Codevenom\FakturowniaBundle\Application\DTO;
+namespace Codevenom\FakturowniaBundle\Application\Dto;
 
 use Codevenom\FakturowniaBundle\Domain\Enum\PaymentState;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\InvoiceId;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\Money;
 
-final readonly class PaymentStatusDto
+final readonly class PaymentStatus
 {
     public function __construct(
         public ?InvoiceId $invoiceId,

@@ -6,11 +6,11 @@ namespace Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter;
 
 use Codevenom\FakturowniaBundle\Application\Command\CreateClientCommand;
 use Codevenom\FakturowniaBundle\Application\Command\CreateInvoiceCommand;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientDto;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
+use Codevenom\FakturowniaBundle\Application\Dto\Client;
+use Codevenom\FakturowniaBundle\Application\Dto\ClientList;
+use Codevenom\FakturowniaBundle\Application\Dto\Invoice;
+use Codevenom\FakturowniaBundle\Application\Dto\InvoiceList;
+use Codevenom\FakturowniaBundle\Application\Dto\PaymentStatus;
 use Codevenom\FakturowniaBundle\Application\Query\GetInvoicePaymentStatusQuery;
 use Codevenom\FakturowniaBundle\Application\Query\GetInvoiceQuery;
 use Codevenom\FakturowniaBundle\Application\Query\ListClientsQuery;
@@ -27,14 +27,14 @@ final class FakturowniaGatewayAdapter implements FakturowniaGatewayInterface
     ) {
     }
 
-    public function listInvoices(ListInvoicesQuery $query): InvoiceListDto
+    public function listInvoices(ListInvoicesQuery $query): InvoiceList
     {
         $response = $this->client->listInvoices($this->mapper->mapListInvoicesQueryToFilters($query));
 
         return $this->mapper->mapInvoiceList($response);
     }
 
-    public function getInvoice(GetInvoiceQuery $query): InvoiceDto
+    public function getInvoice(GetInvoiceQuery $query): Invoice
     {
         $response = $this->client->getInvoice(
             $query->invoiceId->value,
@@ -44,28 +44,28 @@ final class FakturowniaGatewayAdapter implements FakturowniaGatewayInterface
         return $this->mapper->mapInvoice($response);
     }
 
-    public function createInvoice(CreateInvoiceCommand $command): InvoiceDto
+    public function createInvoice(CreateInvoiceCommand $command): Invoice
     {
         $response = $this->client->createInvoice($command->invoice->toArray());
 
         return $this->mapper->mapInvoice($response);
     }
 
-    public function listClients(ListClientsQuery $query): ClientListDto
+    public function listClients(ListClientsQuery $query): ClientList
     {
         $response = $this->client->listClients($this->mapper->mapListClientsQueryToFilters($query));
 
         return $this->mapper->mapClientList($response);
     }
 
-    public function createClient(CreateClientCommand $command): ClientDto
+    public function createClient(CreateClientCommand $command): Client
     {
         $response = $this->client->createClient($command->client->toArray());
 
         return $this->mapper->mapClient($response);
     }
 
-    public function getInvoicePaymentStatus(GetInvoicePaymentStatusQuery $query): PaymentStatusDto
+    public function getInvoicePaymentStatus(GetInvoicePaymentStatusQuery $query): PaymentStatus
     {
         $response = $this->client->invoicePaymentStatus($query->invoiceId->value);
 

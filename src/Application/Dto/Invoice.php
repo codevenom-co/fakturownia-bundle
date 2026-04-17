@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Codevenom\FakturowniaBundle\Application\DTO;
+namespace Codevenom\FakturowniaBundle\Application\Dto;
 
 use Codevenom\FakturowniaBundle\Domain\Enum\DocumentType;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\InvoiceId;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
 
-final readonly class InvoiceDto
+final readonly class Invoice
 {
     public function __construct(
         public ?InvoiceId $id,

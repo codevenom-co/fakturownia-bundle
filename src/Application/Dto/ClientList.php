@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Codevenom\FakturowniaBundle\Application\DTO;
+namespace Codevenom\FakturowniaBundle\Application\Dto;
 
-use Codevenom\FakturowniaBundle\Domain\ValueObject\ClientId;
 use Codevenom\FakturowniaBundle\Domain\ValueObject\KeyValuePayload;
 
-final readonly class ClientDto
+final readonly class ClientList
 {
     public function __construct(
-        public ?ClientId $id,
-        public ?string $name,
+        public array $items,
         public KeyValuePayload $payload,
     ) {
     }

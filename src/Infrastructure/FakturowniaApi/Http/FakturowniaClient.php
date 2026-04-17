@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Codevenom\FakturowniaBundle\Http;
+namespace Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http;
 
 use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Exception\ApiResponseException;
 use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Exception\ApiTransportException;
 use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Exception\ApiValidationException;
-use Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClientInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -16,6 +15,7 @@ final class FakturowniaClient implements FakturowniaClientInterface
     public function __construct(
         private readonly HttpClientInterface $httpClient,
         private readonly string $baseUrl,
+        private readonly string $sellerName,
         private readonly string $apiToken,
         private readonly int $timeout,
     ) {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Codevenom\FakturowniaBundle\Mcp;
+namespace Codevenom\FakturowniaBundle\Infrastructure\MCP;
 
 use Codevenom\FakturowniaBundle\Domain\Contract\FakturowniaInterface;
-use Codevenom\FakturowniaBundle\Mcp\Mapper\McpInputMapper;
-use Codevenom\FakturowniaBundle\Mcp\Mapper\McpOutputMapper;
+use Codevenom\FakturowniaBundle\Infrastructure\MCP\Mapper\McpInputMapper;
+use Codevenom\FakturowniaBundle\Infrastructure\MCP\Mapper\McpOutputMapper;
 use Mcp\Capability\Attribute\McpTool;
 
 final class FakturowniaMcpTools

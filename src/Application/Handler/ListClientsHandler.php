@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Application\Handler;
 
-use Codevenom\FakturowniaBundle\Application\DTO\ClientListDto;
+use Codevenom\FakturowniaBundle\Application\Dto\ClientList;
 use Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper;
 use Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper;
 use Codevenom\FakturowniaBundle\Application\Query\ListClientsQuery;
@@ -19,7 +19,7 @@ final class ListClientsHandler
     ) {
     }
 
-    public function handle(ListClientsQuery $query): ClientListDto
+    public function handle(ListClientsQuery $query): ClientList
     {
         $response = $this->gateway->listClients($this->requestMapper->mapListClientsQuery($query));
 

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Mapper;
 
-use Codevenom\FakturowniaBundle\Application\DTO\ClientDto;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
+use Codevenom\FakturowniaBundle\Application\Dto\Client;
+use Codevenom\FakturowniaBundle\Application\Dto\ClientList;
+use Codevenom\FakturowniaBundle\Application\Dto\Invoice;
+use Codevenom\FakturowniaBundle\Application\Dto\InvoiceList;
+use Codevenom\FakturowniaBundle\Application\Dto\PaymentStatus;
 use Codevenom\FakturowniaBundle\Application\Query\GetInvoiceQuery;
 use Codevenom\FakturowniaBundle\Application\Query\ListClientsQuery;
 use Codevenom\FakturowniaBundle\Application\Query\ListInvoicesQuery;
@@ -59,11 +59,11 @@ final class FakturowniaDtoMapper
         ], static fn (mixed $value): bool => null !== $value);
     }
 
-    public function mapInvoice(array $payload): InvoiceDto
+    public function mapInvoice(array $payload): Invoice
     {
         $documentType = DocumentType::fromApiPayload($payload);
 
-        return new InvoiceDto(
+        return new Invoice(
             isset($payload['id']) ? InvoiceId::fromIntOrString((string) $payload['id']) : null,
             isset($payload['number']) ? (string) $payload['number'] : null,
             isset($payload['currency']) ? (string) $payload['currency'] : null,
@@ -72,39 +72,39 @@ final class FakturowniaDtoMapper
         );
     }
 
-    public function mapClient(array $payload): ClientDto
+    public function mapClient(array $payload): Client
     {
-        return new ClientDto(
+        return new Client(
             isset($payload['id']) ? ClientId::fromIntOrString((string) $payload['id']) : null,
             isset($payload['name']) ? (string) $payload['name'] : null,
             KeyValuePayload::fromArray($payload),
         );
     }
 
-    public function mapInvoiceList(array $payload): InvoiceListDto
+    public function mapInvoiceList(array $payload): InvoiceList
     {
         $itemsRaw = $this->extractList($payload, 'invoices');
-        $items = array_map(fn (array $item): InvoiceDto => $this->mapInvoice($item), $itemsRaw);
+        $items = array_map(fn (array $item): Invoice => $this->mapInvoice($item), $itemsRaw);
 
-        return new InvoiceListDto($items, KeyValuePayload::fromArray($payload));
+        return new InvoiceList($items, KeyValuePayload::fromArray($payload));
     }
 
-    public function mapClientList(array $payload): ClientListDto
+    public function mapClientList(array $payload): ClientList
     {
         $itemsRaw = $this->extractList($payload, 'clients');
-        $items = array_map(fn (array $item): ClientDto => $this->mapClient($item), $itemsRaw);
+        $items = array_map(fn (array $item): Client => $this->mapClient($item), $itemsRaw);
 
-        return new ClientListDto($items, KeyValuePayload::fromArray($payload));
+        return new ClientList($items, KeyValuePayload::fromArray($payload));
     }
 
-    public function mapPaymentStatus(array $payload): PaymentStatusDto
+    public function mapPaymentStatus(array $payload): PaymentStatus
     {
         $currency = isset($payload['currency']) ? (string) $payload['currency'] : null;
         $totalGross = $this->mapMoney($payload['total_gross'] ?? null, $currency);
         $leftToPay = $this->mapMoney($payload['left_to_pay'] ?? null, $currency);
         $paymentState = $this->paymentStateResolver->resolve($payload);
 
-        return new PaymentStatusDto(
+        return new PaymentStatus(
             isset($payload['invoice_id']) ? InvoiceId::fromIntOrString((string) $payload['invoice_id']) : null,
             isset($payload['invoice_number']) ? (string) $payload['invoice_number'] : null,
             $currency,

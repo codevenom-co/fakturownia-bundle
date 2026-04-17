@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Application\Handler;
 
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceListDto;
+use Codevenom\FakturowniaBundle\Application\Dto\InvoiceList;
 use Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper;
 use Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper;
 use Codevenom\FakturowniaBundle\Application\Query\ListInvoicesQuery;
@@ -19,7 +19,7 @@ final class ListInvoicesHandler
     ) {
     }
 
-    public function handle(ListInvoicesQuery $query): InvoiceListDto
+    public function handle(ListInvoicesQuery $query): InvoiceList
     {
         $response = $this->gateway->listInvoices($this->requestMapper->mapListInvoicesQuery($query));
 

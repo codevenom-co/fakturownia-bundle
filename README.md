@@ -112,3 +112,14 @@ This package is both a library and MCP integration:
 - as MCP: you expose the same use cases to AI agents through the MCP standard.
 
 This lets you deploy the bundle in SHARDN while also publishing it as a public CODEVENOM OSS package.
+
+
+## Development
+
+If you have Docker and [Task](https://taskfile.dev/) installed, you can easily run tests and tools:
+
+```bash
+task install
+task test
+task cs-fix
+```

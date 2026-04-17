@@ -6,11 +6,11 @@ namespace Codevenom\FakturowniaBundle\Domain\Contract\Port;
 
 use Codevenom\FakturowniaBundle\Application\Command\CreateClientCommand;
 use Codevenom\FakturowniaBundle\Application\Command\CreateInvoiceCommand;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientDto;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
+use Codevenom\FakturowniaBundle\Application\Dto\Client;
+use Codevenom\FakturowniaBundle\Application\Dto\ClientList;
+use Codevenom\FakturowniaBundle\Application\Dto\Invoice;
+use Codevenom\FakturowniaBundle\Application\Dto\InvoiceList;
+use Codevenom\FakturowniaBundle\Application\Dto\PaymentStatus;
 use Codevenom\FakturowniaBundle\Application\Query\GetInvoicePaymentStatusQuery;
 use Codevenom\FakturowniaBundle\Application\Query\GetInvoiceQuery;
 use Codevenom\FakturowniaBundle\Application\Query\ListClientsQuery;
@@ -18,15 +18,15 @@ use Codevenom\FakturowniaBundle\Application\Query\ListInvoicesQuery;
 
 interface FakturowniaGatewayInterface
 {
-    public function listInvoices(ListInvoicesQuery $query): InvoiceListDto;
+    public function listInvoices(ListInvoicesQuery $query): InvoiceList;
 
-    public function getInvoice(GetInvoiceQuery $query): InvoiceDto;
+    public function getInvoice(GetInvoiceQuery $query): Invoice;
 
-    public function createInvoice(CreateInvoiceCommand $command): InvoiceDto;
+    public function createInvoice(CreateInvoiceCommand $command): Invoice;
 
-    public function listClients(ListClientsQuery $query): ClientListDto;
+    public function listClients(ListClientsQuery $query): ClientList;
 
-    public function createClient(CreateClientCommand $command): ClientDto;
+    public function createClient(CreateClientCommand $command): Client;
 
-    public function getInvoicePaymentStatus(GetInvoicePaymentStatusQuery $query): PaymentStatusDto;
+    public function getInvoicePaymentStatus(GetInvoicePaymentStatusQuery $query): PaymentStatus;
 }

@@ -1,0 +1,40 @@
+version: '3'
+
+vars:
+  PHP_CONT: docker-compose exec php
+
+tasks:
+  install:
+    desc: Install dependencies
+    cmds:
+      - "{{.PHP_CONT}} composer install"
+
+  test:
+    desc: Run all tests
+    cmds:
+      - "{{.PHP_CONT}} vendor/bin/phpunit"
+
+  test-unit:
+    desc: Run unit tests
+    cmds:
+      - "{{.PHP_CONT}} vendor/bin/phpunit --testsuite Unit"
+
+  test-integration:
+    desc: Run integration tests
+    cmds:
+      - "{{.PHP_CONT}} vendor/bin/phpunit --testsuite Integration"
+
+  cs-check:
+    desc: Check code style
+    cmds:
+      - "{{.PHP_CONT}} vendor/bin/php-cs-fixer fix --dry-run --diff"
+
+  cs-fix:
+    desc: Fix code style
+    cmds:
+      - "{{.PHP_CONT}} vendor/bin/php-cs-fixer fix"
+
+  phpstan:
+    desc: Run static analysis
+    cmds:
+      - "{{.PHP_CONT}} vendor/bin/phpstan analyse src"

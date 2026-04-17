@@ -3,7 +3,21 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="tests/bootstrap.php"
          colors="true"
+         cacheDirectory=".phpunit.cache"
+         failOnWarning="true"
+         failOnRisky="true"
 >
+    <php>
+        <ini name="display_errors" value="1" />
+        <ini name="error_reporting" value="-1" />
+        <server name="APP_ENV" value="test" force="true" />
+        <server name="SHELL_VERBOSITY" value="-1" />
+        <server name="KERNEL_CLASS" value="Codevenom\FakturowniaBundle\Tests\App\TestKernel" />
+
+        <!-- Optional: set defaults for integration env vars (usually keep empty; set real values in CI secrets / local env) -->
+        <server name="FAKTUROWNIA_API_TOKEN" value="" />
+    </php>
+
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>

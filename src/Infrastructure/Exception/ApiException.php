@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Codevenom\FakturowniaBundle\Exception;
+namespace Codevenom\FakturowniaBundle\Infrastructure\Exception;
 
 final class ApiException extends \RuntimeException
 {

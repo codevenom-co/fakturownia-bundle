@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Codevenom\FakturowniaBundle\Mcp\Mapper;
+namespace Codevenom\FakturowniaBundle\Infrastructure\MCP\Mapper;
 
 use Codevenom\FakturowniaBundle\Application\Command\CreateClientCommand;
 use Codevenom\FakturowniaBundle\Application\Command\CreateInvoiceCommand;

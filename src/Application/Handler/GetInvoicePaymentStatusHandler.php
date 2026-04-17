@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Application\Handler;
 
-use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
+use Codevenom\FakturowniaBundle\Application\Dto\PaymentStatus;
 use Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper;
 use Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper;
 use Codevenom\FakturowniaBundle\Application\Query\GetInvoicePaymentStatusQuery;
@@ -22,7 +22,7 @@ final class GetInvoicePaymentStatusHandler
     ) {
     }
 
-    public function handle(GetInvoicePaymentStatusQuery $query): PaymentStatusDto
+    public function handle(GetInvoicePaymentStatusQuery $query): PaymentStatus
     {
         $response = $this->gateway->getInvoicePaymentStatus(
             $this->requestMapper->mapGetInvoicePaymentStatusQuery($query),

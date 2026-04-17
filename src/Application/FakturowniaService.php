@@ -6,11 +6,11 @@ namespace Codevenom\FakturowniaBundle\Application;
 
 use Codevenom\FakturowniaBundle\Application\Command\CreateClientCommand;
 use Codevenom\FakturowniaBundle\Application\Command\CreateInvoiceCommand;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientDto;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
+use Codevenom\FakturowniaBundle\Application\Dto\Client;
+use Codevenom\FakturowniaBundle\Application\Dto\ClientList;
+use Codevenom\FakturowniaBundle\Application\Dto\Invoice;
+use Codevenom\FakturowniaBundle\Application\Dto\InvoiceList;
+use Codevenom\FakturowniaBundle\Application\Dto\PaymentStatus;
 use Codevenom\FakturowniaBundle\Application\Handler\CreateClientHandler;
 use Codevenom\FakturowniaBundle\Application\Handler\CreateInvoiceHandler;
 use Codevenom\FakturowniaBundle\Application\Handler\GetInvoiceHandler;
@@ -36,32 +36,32 @@ final class FakturowniaService implements FakturowniaInterface
     {
     }
 
-    public function listInvoices(ListInvoicesQuery $query): InvoiceListDto
+    public function listInvoices(ListInvoicesQuery $query): InvoiceList
     {
         return $this->listInvoicesHandler->handle($query);
     }
 
-    public function getInvoice(GetInvoiceQuery $query): InvoiceDto
+    public function getInvoice(GetInvoiceQuery $query): Invoice
     {
         return $this->getInvoiceHandler->handle($query);
     }
 
-    public function createInvoice(CreateInvoiceCommand $command): InvoiceDto
+    public function createInvoice(CreateInvoiceCommand $command): Invoice
     {
         return $this->createInvoiceHandler->handle($command);
     }
 
-    public function listClients(ListClientsQuery $query): ClientListDto
+    public function listClients(ListClientsQuery $query): ClientList
     {
         return $this->listClientsHandler->handle($query);
     }
 
-    public function createClient(CreateClientCommand $command): ClientDto
+    public function createClient(CreateClientCommand $command): Client
     {
         return $this->createClientHandler->handle($command);
     }
 
-    public function getInvoicePaymentStatus(GetInvoicePaymentStatusQuery $query): PaymentStatusDto
+    public function getInvoicePaymentStatus(GetInvoicePaymentStatusQuery $query): PaymentStatus
     {
         return $this->getInvoicePaymentStatusHandler->handle($query);
     }

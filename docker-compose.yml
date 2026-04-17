@@ -1,0 +1,12 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    env_file:
+      - .env
+      - .env.local
+    volumes:
+      - .:/app
+    environment:
+      - COMPOSER_ALLOW_SUPERUSER=1

@@ -6,11 +6,11 @@ namespace Codevenom\FakturowniaBundle\Tests\Unit\Application\Handler;
 
 use Codevenom\FakturowniaBundle\Application\Command\CreateClientCommand;
 use Codevenom\FakturowniaBundle\Application\Command\CreateInvoiceCommand;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientDto;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
+use Codevenom\FakturowniaBundle\Application\Dto\Client;
+use Codevenom\FakturowniaBundle\Application\Dto\ClientList;
+use Codevenom\FakturowniaBundle\Application\Dto\Invoice;
+use Codevenom\FakturowniaBundle\Application\Dto\InvoiceList;
+use Codevenom\FakturowniaBundle\Application\Dto\PaymentStatus;
 use Codevenom\FakturowniaBundle\Application\Handler\CreateClientHandler;
 use Codevenom\FakturowniaBundle\Application\Handler\CreateInvoiceHandler;
 use Codevenom\FakturowniaBundle\Application\Handler\GetInvoiceHandler;
@@ -41,7 +41,7 @@ final class UseCaseHandlersTest extends TestCase
     public function testListInvoicesHandlerDelegatesAndReturnsResponse(): void
     {
         $gateway = new RecordingGateway();
-        $expected = new InvoiceListDto([], KeyValuePayload::fromArray(['invoices' => []]));
+        $expected = new InvoiceList([], KeyValuePayload::fromArray(['invoices' => []]));
         $gateway->listInvoicesResponse = $expected;
         $handler = new ListInvoicesHandler($gateway, new RequestDtoMapper(), new ResponseDtoMapper());
         $query = new ListInvoicesQuery(page: 2, perPage: 10, period: 'last_month');
@@ -53,7 +53,7 @@ final class UseCaseHandlersTest extends TestCase
     public function testGetInvoiceHandlerDelegatesAndReturnsResponse(): void
     {
         $gateway = new RecordingGateway();
-        $expected = new InvoiceDto(
+        $expected = new Invoice(
             InvoiceId::fromIntOrString('42'),
             'FV/42',
             'PLN',
@@ -72,7 +72,7 @@ final class UseCaseHandlersTest extends TestCase
     {
         $gateway = new RecordingGateway();
         $events = new InMemoryDomainEventDispatcher();
-        $expected = new InvoiceDto(
+        $expected = new Invoice(
             InvoiceId::fromIntOrString('100'),
             'FV/100',
             'PLN',
@@ -92,7 +92,7 @@ final class UseCaseHandlersTest extends TestCase
     public function testListClientsHandlerDelegatesAndReturnsResponse(): void
     {
         $gateway = new RecordingGateway();
-        $expected = new ClientListDto([], KeyValuePayload::fromArray(['clients' => []]));
+        $expected = new ClientList([], KeyValuePayload::fromArray(['clients' => []]));
         $gateway->listClientsResponse = $expected;
         $handler = new ListClientsHandler($gateway, new RequestDtoMapper(), new ResponseDtoMapper());
         $query = new ListClientsQuery(page: 1, perPage: 25, query: 'acme');
@@ -105,7 +105,7 @@ final class UseCaseHandlersTest extends TestCase
     {
         $gateway = new RecordingGateway();
         $events = new InMemoryDomainEventDispatcher();
-        $expected = new ClientDto(
+        $expected = new Client(
             ClientId::fromIntOrString('7'),
             'Acme',
             KeyValuePayload::fromArray(['id' => 7]),
@@ -124,7 +124,7 @@ final class UseCaseHandlersTest extends TestCase
     {
         $gateway = new RecordingGateway();
         $events = new InMemoryDomainEventDispatcher();
-        $expected = new PaymentStatusDto(
+        $expected = new PaymentStatus(
             InvoiceId::fromIntOrString('9'),
             'FV/9',
             'PLN',
@@ -162,54 +162,54 @@ final class RecordingGateway implements FakturowniaGatewayInterface
 
     public ?GetInvoicePaymentStatusQuery $getInvoicePaymentStatusQuery = null;
 
-    public InvoiceListDto $listInvoicesResponse;
+    public InvoiceList $listInvoicesResponse;
 
-    public InvoiceDto $getInvoiceResponse;
+    public Invoice $getInvoiceResponse;
 
-    public InvoiceDto $createInvoiceResponse;
+    public Invoice $createInvoiceResponse;
 
-    public ClientListDto $listClientsResponse;
+    public ClientList $listClientsResponse;
 
-    public ClientDto $createClientResponse;
+    public Client $createClientResponse;
 
-    public PaymentStatusDto $getInvoicePaymentStatusResponse;
+    public PaymentStatus $getInvoicePaymentStatusResponse;
 
-    public function listInvoices(ListInvoicesQuery $query): InvoiceListDto
+    public function listInvoices(ListInvoicesQuery $query): InvoiceList
     {
         $this->listInvoicesQuery = $query;
 
         return $this->listInvoicesResponse;
     }
 
-    public function getInvoice(GetInvoiceQuery $query): InvoiceDto
+    public function getInvoice(GetInvoiceQuery $query): Invoice
     {
         $this->getInvoiceQuery = $query;
 
         return $this->getInvoiceResponse;
     }
 
-    public function createInvoice(CreateInvoiceCommand $command): InvoiceDto
+    public function createInvoice(CreateInvoiceCommand $command): Invoice
     {
         $this->createInvoiceCommand = $command;
 
         return $this->createInvoiceResponse;
     }
 
-    public function listClients(ListClientsQuery $query): ClientListDto
+    public function listClients(ListClientsQuery $query): ClientList
     {
         $this->listClientsQuery = $query;
 
         return $this->listClientsResponse;
     }
 
-    public function createClient(CreateClientCommand $command): ClientDto
+    public function createClient(CreateClientCommand $command): Client
     {
         $this->createClientCommand = $command;
 
         return $this->createClientResponse;
     }
 
-    public function getInvoicePaymentStatus(GetInvoicePaymentStatusQuery $query): PaymentStatusDto
+    public function getInvoicePaymentStatus(GetInvoicePaymentStatusQuery $query): PaymentStatus
     {
         $this->getInvoicePaymentStatusQuery = $query;
 

@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle\Application\Mapper;
 
-use Codevenom\FakturowniaBundle\Application\DTO\ClientDto;
-use Codevenom\FakturowniaBundle\Application\DTO\ClientListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceDto;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceListDto;
-use Codevenom\FakturowniaBundle\Application\DTO\PaymentStatusDto;
+use Codevenom\FakturowniaBundle\Application\Dto\Client;
+use Codevenom\FakturowniaBundle\Application\Dto\ClientList;
+use Codevenom\FakturowniaBundle\Application\Dto\Invoice;
+use Codevenom\FakturowniaBundle\Application\Dto\InvoiceList;
+use Codevenom\FakturowniaBundle\Application\Dto\PaymentStatus;
 
 final class ResponseDtoMapper
 {
-    public function mapInvoiceList(InvoiceListDto $response): InvoiceListDto
+    public function mapInvoiceList(InvoiceList $response): InvoiceList
     {
         return $response;
     }
 
-    public function mapInvoice(InvoiceDto $response): InvoiceDto
+    public function mapInvoice(Invoice $response): Invoice
     {
         return $response;
     }
 
-    public function mapClientList(ClientListDto $response): ClientListDto
+    public function mapClientList(ClientList $response): ClientList
     {
         return $response;
     }
 
-    public function mapClient(ClientDto $response): ClientDto
+    public function mapClient(Client $response): Client
     {
         return $response;
     }
 
-    public function mapPaymentStatus(PaymentStatusDto $response): PaymentStatusDto
+    public function mapPaymentStatus(PaymentStatus $response): PaymentStatus
     {
         return $response;
     }

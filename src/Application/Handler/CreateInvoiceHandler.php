@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Codevenom\FakturowniaBundle\Application\Handler;
 
 use Codevenom\FakturowniaBundle\Application\Command\CreateInvoiceCommand;
-use Codevenom\FakturowniaBundle\Application\DTO\InvoiceDto;
+use Codevenom\FakturowniaBundle\Application\Dto\Invoice;
 use Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper;
 use Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper;
 use Codevenom\FakturowniaBundle\Domain\Contract\Port\FakturowniaGatewayInterface;
@@ -22,7 +22,7 @@ final class CreateInvoiceHandler
     ) {
     }
 
-    public function handle(CreateInvoiceCommand $command): InvoiceDto
+    public function handle(CreateInvoiceCommand $command): Invoice
     {
         $response = $this->gateway->createInvoice($this->requestMapper->mapCreateInvoiceCommand($command));
         $invoice = $this->responseMapper->mapInvoice($response);
