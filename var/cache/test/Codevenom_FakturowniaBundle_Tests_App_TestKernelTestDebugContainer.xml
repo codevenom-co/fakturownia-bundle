@@ -60,17 +60,19 @@
     <parameter key="test.client.parameters" type="collection"/>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
     <parameter key="debug.container.dump">/app/var/cache/test/Codevenom_FakturowniaBundle_Tests_App_TestKernelTestDebugContainer.xml</parameter>
+    <parameter key="serializer.mapping.cache.file">/app/var/cache/test/serialization.php</parameter>
+    <parameter key=".serializer.named_serializers" type="collection"/>
     <parameter key="cache.prefix.seed">_/app.Codevenom_FakturowniaBundle_Tests_App_TestKernelTestDebugContainer</parameter>
     <parameter key="data_collector.templates" type="collection"/>
-    <parameter key="codevenom_fakturownia.base_url">https://codevenom.fakturownia.pl</parameter>
-    <parameter key="codevenom_fakturownia.seller_name">CODEVENOM</parameter>
-    <parameter key="codevenom_fakturownia.api_token"/>
-    <parameter key="codevenom_fakturownia.timeout">5</parameter>
+    <parameter key="codevenom_fakturownia.base_url">%env(FAKTUROWNIA_BASE_URL)%</parameter>
+    <parameter key="codevenom_fakturownia.api_token">%env(FAKTUROWNIA_API_TOKEN)%</parameter>
+    <parameter key="codevenom_fakturownia.seller_name">%env(default::FAKTUROWNIA_SELLER_NAME)%</parameter>
+    <parameter key="codevenom_fakturownia.downloads_path">/app/var/fakturownia</parameter>
+    <parameter key="codevenom_fakturownia.timeout">10</parameter>
     <parameter key="console.command.ids" type="collection"/>
   </parameters>
   <services>
     <service id="service_container" class="Symfony\Component\DependencyInjection\ContainerInterface" public="true" synthetic="true"/>
-    <service id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Event\InMemoryDomainEventDispatcher" class="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Event\InMemoryDomainEventDispatcher" public="true"/>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver" priority="100">controller.argument_value_resolver</tag>
@@ -84,7 +86,12 @@
     </service>
     <service id="argument_resolver.request_payload" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver" lazy="true">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver">controller.targeted_value_resolver</tag>
-      <tag name="container.error" message="You can neither use &quot;#[MapRequestPayload]&quot; nor &quot;#[MapQueryString]&quot; since the Serializer component is not installed. Try running &quot;composer require symfony/serializer-pack&quot;."/>
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="serializer"/>
+      <argument>null</argument>
+      <argument>null</argument>
+      <argument>validators</argument>
     </service>
     <service id="argument_resolver.request_attribute" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver" priority="100">controller.argument_value_resolver</tag>
@@ -136,7 +143,7 @@
     <service id="error_controller" class="Symfony\Component\HttpKernel\Controller\ErrorController" public="true">
       <argument type="service" id="http_kernel"/>
       <argument>error_controller</argument>
-      <argument type="service" id="error_handler.error_renderer.default"/>
+      <argument type="service" id="error_handler.error_renderer.serializer"/>
     </service>
     <service id="exception_listener" class="Symfony\Component\HttpKernel\EventListener\ErrorListener">
       <tag name="kernel.event_subscriber"/>
@@ -590,6 +597,17 @@
         <argument>Display configured listeners for an application</argument>
       </call>
     </service>
+    <service id="console.command.serializer_debug" class="Symfony\Component\Serializer\Command\DebugCommand">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+      <call method="setName">
+        <argument>debug:serializer</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Display serialization information for classes</argument>
+      </call>
+    </service>
     <service id="console.command.yaml_lint" class="Symfony\Bundle\FrameworkBundle\Command\YamlLintCommand">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
@@ -908,6 +926,7 @@
         <argument key="argument_resolver.backed_enum_resolver" type="service_closure" id="argument_resolver.backed_enum_resolver" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.uid" type="service_closure" id="argument_resolver.uid" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.datetime" type="service_closure" id="argument_resolver.datetime" on-invalid="ignore_uninitialized"/>
+        <argument key="argument_resolver.request_payload" type="service_closure" id="argument_resolver.request_payload" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.request_attribute" type="service_closure" id="argument_resolver.request_attribute" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.request" type="service_closure" id="argument_resolver.request" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.session" type="service_closure" id="argument_resolver.session" on-invalid="ignore_uninitialized"/>
@@ -963,6 +982,7 @@
         <argument key="console.command.debug_autowiring" type="service_closure" id="console.command.debug_autowiring" on-invalid="ignore_uninitialized"/>
         <argument key="console.command.dotenv_debug" type="service_closure" id="console.command.dotenv_debug" on-invalid="ignore_uninitialized"/>
         <argument key="console.command.event_dispatcher_debug" type="service_closure" id="console.command.event_dispatcher_debug" on-invalid="ignore_uninitialized"/>
+        <argument key="console.command.serializer_debug" type="service_closure" id="console.command.serializer_debug" on-invalid="ignore_uninitialized"/>
         <argument key="console.command.yaml_lint" type="service_closure" id="console.command.yaml_lint" on-invalid="ignore_uninitialized"/>
         <argument key="console.command.secrets_set" type="service_closure" id="console.command.secrets_set" on-invalid="ignore_uninitialized"/>
         <argument key="console.command.secrets_remove" type="service_closure" id="console.command.secrets_remove" on-invalid="ignore_uninitialized"/>
@@ -998,15 +1018,62 @@
         <argument key="debug.argument_resolver.inner" type="service_closure" id="debug.argument_resolver.inner" on-invalid="ignore_uninitialized"/>
         <argument key="debug.argument_resolver" type="service_closure" id="debug.argument_resolver" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.not_tagged_controller" type="service_closure" id="argument_resolver.not_tagged_controller" on-invalid="ignore_uninitialized"/>
+        <argument key="property_accessor" type="service_closure" id="property_accessor" on-invalid="ignore_uninitialized"/>
         <argument key="secrets.vault" type="service_closure" id="secrets.vault" on-invalid="ignore_uninitialized"/>
         <argument key="secrets.env_var_loader" type="service_closure" id="secrets.env_var_loader" on-invalid="ignore_uninitialized"/>
         <argument key="secrets.decryption_key" type="service_closure" id="secrets.decryption_key" on-invalid="ignore_uninitialized"/>
         <argument key="secrets.local_vault" type="service_closure" id="secrets.local_vault" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer" type="service_closure" id="serializer" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.mapping.class_discriminator_resolver" type="service_closure" id="serializer.mapping.class_discriminator_resolver" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.constraint_violation_list" type="service_closure" id="serializer.normalizer.constraint_violation_list" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.datetimezone" type="service_closure" id="serializer.normalizer.datetimezone" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.dateinterval" type="service_closure" id="serializer.normalizer.dateinterval" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.data_uri" type="service_closure" id="serializer.normalizer.data_uri" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.datetime" type="service_closure" id="serializer.normalizer.datetime" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.json_serializable" type="service_closure" id="serializer.normalizer.json_serializable" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.problem" type="service_closure" id="serializer.normalizer.problem" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.denormalizer.unwrapping" type="service_closure" id="serializer.denormalizer.unwrapping" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.uid" type="service_closure" id="serializer.normalizer.uid" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.form_error" type="service_closure" id="serializer.normalizer.form_error" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.object" type="service_closure" id="serializer.normalizer.object" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.property" type="service_closure" id="serializer.normalizer.property" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.denormalizer.array" type="service_closure" id="serializer.denormalizer.array" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.mapping.chain_loader" type="service_closure" id="serializer.mapping.chain_loader" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.mapping.attribute_loader" type="service_closure" id="serializer.mapping.attribute_loader" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.mapping.class_metadata_factory" type="service_closure" id="serializer.mapping.class_metadata_factory" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.mapping.cache_warmer" type="service_closure" id="serializer.mapping.cache_warmer" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.mapping.cache.symfony" type="service_closure" id="serializer.mapping.cache.symfony" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.encoder.xml" type="service_closure" id="serializer.encoder.xml" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.encoder.json" type="service_closure" id="serializer.encoder.json" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.encoder.yaml" type="service_closure" id="serializer.encoder.yaml" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.encoder.csv" type="service_closure" id="serializer.encoder.csv" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.name_converter.camel_case_to_snake_case" type="service_closure" id="serializer.name_converter.camel_case_to_snake_case" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.name_converter.snake_case_to_camel_case" type="service_closure" id="serializer.name_converter.snake_case_to_camel_case" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.name_converter.metadata_aware" type="service_closure" id="serializer.name_converter.metadata_aware" on-invalid="ignore_uninitialized"/>
+        <argument key="property_info.serializer_extractor" type="service_closure" id="property_info.serializer_extractor" on-invalid="ignore_uninitialized"/>
+        <argument key="error_handler.error_renderer.serializer" type="service_closure" id="error_handler.error_renderer.serializer" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.backed_enum" type="service_closure" id="serializer.normalizer.backed_enum" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.normalizer.number" type="service_closure" id="serializer.normalizer.number" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.type_context_factory" type="service_closure" id="type_info.type_context_factory" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.resolver" type="service_closure" id="type_info.resolver" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.resolver.reflection_type" type="service_closure" id="type_info.resolver.reflection_type" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.resolver.reflection_parameter" type="service_closure" id="type_info.resolver.reflection_parameter" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.resolver.reflection_property" type="service_closure" id="type_info.resolver.reflection_property" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.resolver.reflection_return" type="service_closure" id="type_info.resolver.reflection_return" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.resolver.string" type="service_closure" id="type_info.resolver.string" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.resolver.reflection_parameter.phpdoc_aware" type="service_closure" id="type_info.resolver.reflection_parameter.phpdoc_aware" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.resolver.reflection_property.phpdoc_aware" type="service_closure" id="type_info.resolver.reflection_property.phpdoc_aware" on-invalid="ignore_uninitialized"/>
+        <argument key="type_info.resolver.reflection_return.phpdoc_aware" type="service_closure" id="type_info.resolver.reflection_return.phpdoc_aware" on-invalid="ignore_uninitialized"/>
+        <argument key="property_info" type="service_closure" id="property_info" on-invalid="ignore_uninitialized"/>
+        <argument key="property_info.reflection_extractor" type="service_closure" id="property_info.reflection_extractor" on-invalid="ignore_uninitialized"/>
+        <argument key="property_info.phpstan_extractor" type="service_closure" id="property_info.phpstan_extractor" on-invalid="ignore_uninitialized"/>
+        <argument key="property_info.php_doc_extractor" type="service_closure" id="property_info.php_doc_extractor" on-invalid="ignore_uninitialized"/>
         <argument key="ulid.factory" type="service_closure" id="ulid.factory" on-invalid="ignore_uninitialized"/>
         <argument key="uuid.factory" type="service_closure" id="uuid.factory" on-invalid="ignore_uninitialized"/>
         <argument key="name_based_uuid.factory" type="service_closure" id="name_based_uuid.factory" on-invalid="ignore_uninitialized"/>
         <argument key="random_based_uuid.factory" type="service_closure" id="random_based_uuid.factory" on-invalid="ignore_uninitialized"/>
         <argument key="time_based_uuid.factory" type="service_closure" id="time_based_uuid.factory" on-invalid="ignore_uninitialized"/>
+        <argument key="cache.property_access" type="service_closure" id="cache.property_access" on-invalid="ignore_uninitialized"/>
         <argument key="logger" type="service_closure" id="logger" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Bundle\FrameworkBundle\Controller\ControllerHelper" type="service_closure" id="controller.helper" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface" type="service_closure" id="parameter_bag" on-invalid="ignore_uninitialized"/>
@@ -1028,7 +1095,7 @@
         <argument key="error_renderer.html" type="service_closure" id="error_handler.error_renderer.html" on-invalid="ignore_uninitialized"/>
         <argument key="error_renderer.cli" type="service_closure" id="error_handler.error_renderer.cli" on-invalid="ignore_uninitialized"/>
         <argument key="error_renderer.default" type="service_closure" id="error_handler.error_renderer.default" on-invalid="ignore_uninitialized"/>
-        <argument key="error_renderer" type="service_closure" id="error_handler.error_renderer.default" on-invalid="ignore_uninitialized"/>
+        <argument key="error_renderer" type="service_closure" id="error_handler.error_renderer.serializer" on-invalid="ignore_uninitialized"/>
         <argument key="Psr\Container\ContainerInterface $parameterBag" type="service_closure" id="parameter_bag" on-invalid="ignore_uninitialized"/>
         <argument key="Psr\Cache\CacheItemPoolInterface" type="service_closure" id="cache.app" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Contracts\Cache\CacheInterface" type="service_closure" id="cache.app" on-invalid="ignore_uninitialized"/>
@@ -1037,6 +1104,25 @@
         <argument key="Symfony\Contracts\HttpClient\HttpClientInterface" type="service_closure" id="http_client.uri_template" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter" type="service_closure" id="debug.file_link_formatter" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\Stopwatch\Stopwatch" type="service_closure" id="debug.stopwatch" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\PropertyAccess\PropertyAccessorInterface" type="service_closure" id="property_accessor" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\Serializer\SerializerInterface" type="service_closure" id="serializer" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\Serializer\Normalizer\NormalizerInterface" type="service_closure" id="serializer" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\Serializer\Normalizer\DenormalizerInterface" type="service_closure" id="serializer" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\Serializer\Encoder\EncoderInterface" type="service_closure" id="serializer" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\Serializer\Encoder\DecoderInterface" type="service_closure" id="serializer" on-invalid="ignore_uninitialized"/>
+        <argument key="serializer.property_accessor" type="service_closure" id="property_accessor" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\Serializer\Mapping\ClassDiscriminatorResolverInterface" type="service_closure" id="serializer.mapping.class_discriminator_resolver" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface" type="service_closure" id="serializer.mapping.class_metadata_factory" on-invalid="ignore_uninitialized"/>
+        <argument key="error_renderer.serializer" type="service_closure" id="error_handler.error_renderer.serializer" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\TypeInfo\TypeResolver\TypeResolverInterface" type="service_closure" id="type_info.resolver" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface" type="service_closure" id="property_info" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\PropertyInfo\PropertyDescriptionExtractorInterface" type="service_closure" id="property_info" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface" type="service_closure" id="property_info" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface" type="service_closure" id="property_info" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\PropertyInfo\PropertyListExtractorInterface" type="service_closure" id="property_info" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface" type="service_closure" id="property_info" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface" type="service_closure" id="property_info.reflection_extractor" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface" type="service_closure" id="property_info.reflection_extractor" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\Uid\Factory\UlidFactory" type="service_closure" id="ulid.factory" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\Uid\Factory\UuidFactory" type="service_closure" id="uuid.factory" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\Uid\Factory\NameBasedUuidFactory" type="service_closure" id="name_based_uuid.factory" on-invalid="ignore_uninitialized"/>
@@ -1045,7 +1131,6 @@
         <argument key="cache.default_redis_provider" type="service_closure" id=".cache_connection.MfCypIA" on-invalid="ignore_uninitialized"/>
         <argument key="cache.default_valkey_provider" type="service_closure" id=".cache_connection.H8vabc8" on-invalid="ignore_uninitialized"/>
         <argument key="cache.default_memcached_provider" type="service_closure" id=".cache_connection.8kvDmRs" on-invalid="ignore_uninitialized"/>
-        <argument key="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClientInterface" type="service_closure" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClient" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.controller_locator" type="service_closure" id=".service_locator.dpiLQ5O" on-invalid="ignore_uninitialized"/>
         <argument key="Psr\Log\LoggerInterface" type="service_closure" id="logger" on-invalid="ignore_uninitialized"/>
         <argument key="http_client" type="service_closure" id="http_client.uri_template" on-invalid="ignore_uninitialized"/>
@@ -1146,6 +1231,14 @@
       <argument type="service" id="logger" on-invalid="null"/>
       <argument type="service" id="request_stack" on-invalid="null"/>
       <argument>null</argument>
+      <call method="addListener">
+        <argument>kernel.controller_arguments</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="argument_resolver.request_payload"/>
+          <argument>onKernelControllerArguments</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
       <call method="addListener">
         <argument>kernel.response</argument>
         <argument type="collection">
@@ -1306,6 +1399,13 @@
       <tag name="controller.argument_value_resolver" priority="-200"/>
       <argument type="service" id=".service_locator.dpiLQ5O"/>
     </service>
+    <service id="property_accessor" class="Symfony\Component\PropertyAccess\PropertyAccessor">
+      <argument>3</argument>
+      <argument>2</argument>
+      <argument type="service" id="cache.property_access" on-invalid="ignore"/>
+      <argument type="service" id="property_info.reflection_extractor" on-invalid="null"/>
+      <argument type="service" id="property_info.reflection_extractor" on-invalid="null"/>
+    </service>
     <service id="secrets.vault" class="Symfony\Bundle\FrameworkBundle\Secrets\SodiumVault">
       <argument>/app/config/secrets/%env(default:kernel.environment:APP_RUNTIME_ENV)%</argument>
       <argument type="service" id="secrets.decryption_key" on-invalid="ignore"/>
@@ -1321,6 +1421,282 @@
     </service>
     <service id="secrets.local_vault" class="Symfony\Bundle\FrameworkBundle\Secrets\DotenvVault">
       <argument>/app/.env.test.local</argument>
+    </service>
+    <service id="serializer" class="Symfony\Component\Serializer\Serializer">
+      <argument type="collection">
+        <argument type="service" id="serializer.denormalizer.unwrapping"/>
+        <argument type="service" id="serializer.normalizer.problem"/>
+        <argument type="service" id="serializer.normalizer.uid"/>
+        <argument type="service" id="serializer.normalizer.datetime"/>
+        <argument type="service" id="serializer.normalizer.constraint_violation_list"/>
+        <argument type="service" id="serializer.normalizer.datetimezone"/>
+        <argument type="service" id="serializer.normalizer.dateinterval"/>
+        <argument type="service" id="serializer.normalizer.form_error"/>
+        <argument type="service" id="serializer.normalizer.backed_enum"/>
+        <argument type="service" id="serializer.normalizer.number"/>
+        <argument type="service" id="serializer.normalizer.data_uri"/>
+        <argument type="service" id="serializer.normalizer.json_serializable"/>
+        <argument type="service" id="serializer.denormalizer.array"/>
+        <argument type="service" id="serializer.normalizer.object"/>
+      </argument>
+      <argument type="collection">
+        <argument type="service" id="serializer.encoder.xml"/>
+        <argument type="service" id="serializer.encoder.json"/>
+        <argument type="service" id="serializer.encoder.yaml"/>
+        <argument type="service" id="serializer.encoder.csv"/>
+      </argument>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.mapping.class_discriminator_resolver" class="Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata">
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+    </service>
+    <service id="serializer.normalizer.constraint_violation_list" class="Symfony\Component\Serializer\Normalizer\ConstraintViolationListNormalizer" autowire="true">
+      <tag name="serializer.normalizer" built_in="true" priority="-915"/>
+      <tag name="serializer.normalizer.default" priority="-915"/>
+      <argument type="collection"/>
+      <argument type="service" id="serializer.name_converter.metadata_aware"/>
+    </service>
+    <service id="serializer.normalizer.datetimezone" class="Symfony\Component\Serializer\Normalizer\DateTimeZoneNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-915"/>
+      <tag name="serializer.normalizer.default" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.dateinterval" class="Symfony\Component\Serializer\Normalizer\DateIntervalNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-915"/>
+      <tag name="serializer.normalizer.default" priority="-915"/>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.normalizer.data_uri" class="Symfony\Component\Serializer\Normalizer\DataUriNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-920"/>
+      <tag name="serializer.normalizer.default" priority="-920"/>
+      <argument>null</argument>
+    </service>
+    <service id="serializer.normalizer.datetime" class="Symfony\Component\Serializer\Normalizer\DateTimeNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-910"/>
+      <tag name="serializer.normalizer.default" priority="-910"/>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.normalizer.json_serializable" class="Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-950"/>
+      <tag name="serializer.normalizer.default" priority="-950"/>
+      <argument>null</argument>
+      <argument>null</argument>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.normalizer.problem" class="Symfony\Component\Serializer\Normalizer\ProblemNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-890"/>
+      <tag name="serializer.normalizer.default" priority="-890"/>
+      <argument>true</argument>
+      <argument type="collection"/>
+      <argument>null</argument>
+    </service>
+    <service id="serializer.denormalizer.unwrapping" class="Symfony\Component\Serializer\Normalizer\UnwrappingDenormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="1000"/>
+      <tag name="serializer.normalizer.default" priority="1000"/>
+      <argument type="service" id="property_accessor"/>
+    </service>
+    <service id="serializer.normalizer.uid" class="Symfony\Component\Serializer\Normalizer\UidNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-890"/>
+      <tag name="serializer.normalizer.default" priority="-890"/>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.normalizer.form_error" class="Symfony\Component\Serializer\Normalizer\FormErrorNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-915"/>
+      <tag name="serializer.normalizer.default" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.object" class="Symfony\Component\Serializer\Normalizer\ObjectNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-1000"/>
+      <tag name="serializer.normalizer.default" priority="-1000"/>
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+      <argument type="service" id="serializer.name_converter.metadata_aware"/>
+      <argument type="service" id="property_accessor"/>
+      <argument type="service" id="property_info" on-invalid="ignore"/>
+      <argument type="service" id="serializer.mapping.class_discriminator_resolver" on-invalid="ignore"/>
+      <argument>null</argument>
+      <argument type="collection"/>
+      <argument type="service" id="property_info" on-invalid="ignore"/>
+    </service>
+    <service id="serializer.normalizer.property" class="Symfony\Component\Serializer\Normalizer\PropertyNormalizer">
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+      <argument type="service" id="serializer.name_converter.metadata_aware"/>
+      <argument type="service" id="property_info" on-invalid="ignore"/>
+      <argument type="service" id="serializer.mapping.class_discriminator_resolver" on-invalid="ignore"/>
+      <argument>null</argument>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.denormalizer.array" class="Symfony\Component\Serializer\Normalizer\ArrayDenormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-990"/>
+      <tag name="serializer.normalizer.default" priority="-990"/>
+    </service>
+    <service id="serializer.mapping.chain_loader" class="Symfony\Component\Serializer\Mapping\Loader\LoaderChain">
+      <argument type="collection">
+        <argument type="service" id="serializer.mapping.attribute_loader"/>
+      </argument>
+    </service>
+    <service id="serializer.mapping.attribute_loader" class="Symfony\Component\Serializer\Mapping\Loader\AttributeLoader">
+      <argument>true</argument>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.mapping.class_metadata_factory" class="Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory">
+      <argument type="service" id="serializer.mapping.chain_loader"/>
+    </service>
+    <service id="serializer.mapping.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\SerializerCacheWarmer">
+      <tag name="kernel.cache_warmer"/>
+      <argument type="collection">
+        <argument type="service" id="serializer.mapping.attribute_loader"/>
+      </argument>
+      <argument>/app/var/cache/test/serialization.php</argument>
+    </service>
+    <service id="serializer.mapping.cache.symfony" class="Psr\Cache\CacheItemPoolInterface">
+      <argument>/app/var/cache/test/serialization.php</argument>
+      <argument type="service" id="cache.serializer"/>
+      <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
+    </service>
+    <service id="serializer.encoder.xml" class="Symfony\Component\Serializer\Encoder\XmlEncoder">
+      <tag name="serializer.encoder" built_in="true"/>
+      <tag name="serializer.encoder.default"/>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.encoder.json" class="Symfony\Component\Serializer\Encoder\JsonEncoder">
+      <tag name="serializer.encoder" built_in="true"/>
+      <tag name="serializer.encoder.default"/>
+      <argument>null</argument>
+      <argument>null</argument>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.encoder.yaml" class="Symfony\Component\Serializer\Encoder\YamlEncoder">
+      <tag name="serializer.encoder" built_in="true"/>
+      <tag name="serializer.encoder.default"/>
+      <argument>null</argument>
+      <argument>null</argument>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.encoder.csv" class="Symfony\Component\Serializer\Encoder\CsvEncoder">
+      <tag name="serializer.encoder" built_in="true"/>
+      <tag name="serializer.encoder.default"/>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.name_converter.camel_case_to_snake_case" class="Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter"/>
+    <service id="serializer.name_converter.snake_case_to_camel_case" class="Symfony\Component\Serializer\NameConverter\SnakeCaseToCamelCaseNameConverter"/>
+    <service id="serializer.name_converter.metadata_aware.abstract" class="Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter" abstract="true">
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+    </service>
+    <service id="serializer.name_converter.metadata_aware" class="Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter">
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+    </service>
+    <service id="property_info.serializer_extractor" class="Symfony\Component\PropertyInfo\Extractor\SerializerExtractor">
+      <tag name="property_info.list_extractor" priority="-999"/>
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+    </service>
+    <service id="error_handler.error_renderer.serializer" class="Symfony\Component\ErrorHandler\ErrorRenderer\SerializerErrorRenderer">
+      <argument type="service" id="serializer"/>
+      <argument type="service">
+        <service>
+          <argument type="service" id="request_stack"/>
+          <factory class="Symfony\Component\ErrorHandler\ErrorRenderer\SerializerErrorRenderer" method="getPreferredFormat"/>
+        </service>
+      </argument>
+      <argument type="service">
+        <service class="Symfony\Component\ErrorHandler\ErrorRenderer\ErrorRendererInterface" lazy="true">
+          <argument type="collection">
+            <argument type="service" id="error_handler.error_renderer.default"/>
+            <argument>render</argument>
+          </argument>
+          <factory class="Closure" method="fromCallable"/>
+        </service>
+      </argument>
+      <argument type="service">
+        <service>
+          <argument type="service" id="request_stack"/>
+          <argument>true</argument>
+          <factory class="Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer" method="isDebug"/>
+        </service>
+      </argument>
+    </service>
+    <service id="serializer.normalizer.backed_enum" class="Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-915"/>
+      <tag name="serializer.normalizer.default" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.number" class="Symfony\Component\Serializer\Normalizer\NumberNormalizer">
+      <tag name="serializer.normalizer" built_in="true" priority="-915"/>
+      <tag name="serializer.normalizer.default" priority="-915"/>
+    </service>
+    <service id="type_info.type_context_factory" class="Symfony\Component\TypeInfo\TypeContext\TypeContextFactory">
+      <argument type="service" id="type_info.resolver.string" on-invalid="null"/>
+      <argument type="collection"/>
+    </service>
+    <service id="type_info.resolver" class="Symfony\Component\TypeInfo\TypeResolver\TypeResolver">
+      <argument type="service" id=".service_locator.zfRA4vz"/>
+    </service>
+    <service id="type_info.resolver.reflection_type" class="Symfony\Component\TypeInfo\TypeResolver\ReflectionTypeResolver">
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.reflection_parameter" class="Symfony\Component\TypeInfo\TypeResolver\ReflectionParameterTypeResolver">
+      <argument type="service" id="type_info.resolver.reflection_type"/>
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.reflection_property" class="Symfony\Component\TypeInfo\TypeResolver\ReflectionPropertyTypeResolver">
+      <argument type="service" id="type_info.resolver.reflection_type"/>
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.reflection_return" class="Symfony\Component\TypeInfo\TypeResolver\ReflectionReturnTypeResolver">
+      <argument type="service" id="type_info.resolver.reflection_type"/>
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.string" class="Symfony\Component\TypeInfo\TypeResolver\StringTypeResolver">
+      <argument>null</argument>
+      <argument>null</argument>
+      <argument type="collection"/>
+    </service>
+    <service id="type_info.resolver.reflection_parameter.phpdoc_aware" class="Symfony\Component\TypeInfo\TypeResolver\PhpDocAwareReflectionTypeResolver">
+      <argument type="service" id="type_info.resolver.reflection_parameter"/>
+      <argument type="service" id="type_info.resolver.string"/>
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.reflection_property.phpdoc_aware" class="Symfony\Component\TypeInfo\TypeResolver\PhpDocAwareReflectionTypeResolver">
+      <argument type="service" id="type_info.resolver.reflection_property"/>
+      <argument type="service" id="type_info.resolver.string"/>
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.reflection_return.phpdoc_aware" class="Symfony\Component\TypeInfo\TypeResolver\PhpDocAwareReflectionTypeResolver">
+      <argument type="service" id="type_info.resolver.reflection_return"/>
+      <argument type="service" id="type_info.resolver.string"/>
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="property_info" class="Symfony\Component\PropertyInfo\PropertyInfoExtractor">
+      <argument type="iterator">
+        <argument type="service" id="property_info.serializer_extractor"/>
+        <argument type="service" id="property_info.reflection_extractor"/>
+      </argument>
+      <argument type="iterator">
+        <argument type="service" id="property_info.phpstan_extractor"/>
+        <argument type="service" id="property_info.php_doc_extractor"/>
+        <argument type="service" id="property_info.reflection_extractor"/>
+      </argument>
+      <argument type="iterator">
+        <argument type="service" id="property_info.php_doc_extractor"/>
+      </argument>
+      <argument type="iterator">
+        <argument type="service" id="property_info.reflection_extractor"/>
+      </argument>
+      <argument type="iterator">
+        <argument type="service" id="property_info.reflection_extractor"/>
+      </argument>
+    </service>
+    <service id="property_info.reflection_extractor" class="Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor">
+      <tag name="property_info.list_extractor" priority="-1000"/>
+      <tag name="property_info.type_extractor" priority="-1002"/>
+      <tag name="property_info.constructor_extractor" priority="-1002"/>
+      <tag name="property_info.access_extractor" priority="-1000"/>
+      <tag name="property_info.initializable_extractor" priority="-1000"/>
+    </service>
+    <service id="property_info.phpstan_extractor" class="Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor">
+      <tag name="property_info.type_extractor" priority="-1000"/>
+      <tag name="property_info.constructor_extractor" priority="-1000"/>
+    </service>
+    <service id="property_info.php_doc_extractor" class="Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor">
+      <tag name="property_info.description_extractor" priority="-1000"/>
+      <tag name="property_info.type_extractor" priority="-1001"/>
+      <tag name="property_info.constructor_extractor" priority="-1001"/>
     </service>
     <service id="ulid.factory" class="Symfony\Component\Uid\Factory\UlidFactory"/>
     <service id="uuid.factory" class="Symfony\Component\Uid\Factory\UuidFactory">
@@ -1359,74 +1735,66 @@
         <argument key="lazy">true</argument>
       </argument>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Command" class="Codevenom\FakturowniaBundle\Application\Command" abstract="true">
+    <service id="cache.property_access" class="Symfony\Component\Cache\Adapter\ArrayAdapter">
+      <argument>0</argument>
+      <argument>false</argument>
+    </service>
+    <service id="Codevenom\FakturowniaBundle\DependencyInjection" class="Codevenom\FakturowniaBundle\DependencyInjection" abstract="true">
       <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Dto" class="Codevenom\FakturowniaBundle\Application\Dto" abstract="true">
+    <service id="Codevenom\FakturowniaBundle\CodevenomFakturowniaBundle" class="Codevenom\FakturowniaBundle\CodevenomFakturowniaBundle" abstract="true">
       <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Query" class="Codevenom\FakturowniaBundle\Application\Query" abstract="true">
+    <service id="Codevenom\FakturowniaBundle\Invoice\Model" class="Codevenom\FakturowniaBundle\Invoice\Model" abstract="true">
       <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Application\FakturowniaService" class="Codevenom\FakturowniaBundle\Application\FakturowniaService" public="true" autowire="true" autoconfigure="true">
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Handler\ListInvoicesHandler"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Handler\GetInvoiceHandler"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Handler\CreateInvoiceHandler"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Handler\ListClientsHandler"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Handler\CreateClientHandler"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Handler\GetInvoicePaymentStatusHandler"/>
+    <service id="Codevenom\FakturowniaBundle\Invoice\Enum" class="Codevenom\FakturowniaBundle\Invoice\Enum" abstract="true">
+      <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Handler\CreateClientHandler" class="Codevenom\FakturowniaBundle\Application\Handler\CreateClientHandler" public="true" autowire="true" autoconfigure="true">
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Event\InMemoryDomainEventDispatcher"/>
+    <service id="Codevenom\FakturowniaBundle\Report\Model" class="Codevenom\FakturowniaBundle\Report\Model" abstract="true">
+      <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Handler\CreateInvoiceHandler" class="Codevenom\FakturowniaBundle\Application\Handler\CreateInvoiceHandler" public="true" autowire="true" autoconfigure="true">
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Event\InMemoryDomainEventDispatcher"/>
+    <service id="Codevenom\FakturowniaBundle\Report\Factory" class="Codevenom\FakturowniaBundle\Report\Factory" abstract="true">
+      <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Handler\GetInvoiceHandler" class="Codevenom\FakturowniaBundle\Application\Handler\GetInvoiceHandler" public="true" autowire="true" autoconfigure="true">
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper"/>
+    <service id="Codevenom\FakturowniaBundle\Exception" class="Codevenom\FakturowniaBundle\Exception" abstract="true">
+      <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Handler\GetInvoicePaymentStatusHandler" class="Codevenom\FakturowniaBundle\Application\Handler\GetInvoicePaymentStatusHandler" public="true" autowire="true" autoconfigure="true">
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Event\InMemoryDomainEventDispatcher"/>
+    <service id="Codevenom\FakturowniaBundle\Shared\Mapper" class="Codevenom\FakturowniaBundle\Shared\Mapper" abstract="true">
+      <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Handler\ListClientsHandler" class="Codevenom\FakturowniaBundle\Application\Handler\ListClientsHandler" public="true" autowire="true" autoconfigure="true">
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper"/>
-    </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Handler\ListInvoicesHandler" class="Codevenom\FakturowniaBundle\Application\Handler\ListInvoicesHandler" public="true" autowire="true" autoconfigure="true">
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper"/>
-    </service>
-    <service id="Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper" class="Codevenom\FakturowniaBundle\Application\Mapper\RequestDtoMapper" public="true" autowire="true" autoconfigure="true"/>
-    <service id="Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper" class="Codevenom\FakturowniaBundle\Application\Mapper\ResponseDtoMapper" public="true" autowire="true" autoconfigure="true"/>
-    <service id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClient" class="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClient" public="true" autowire="true" autoconfigure="true">
-      <argument type="service" id="http_client.uri_template"/>
-      <argument>https://codevenom.fakturownia.pl</argument>
-      <argument>CODEVENOM</argument>
-      <argument/>
-      <argument>5</argument>
-    </service>
-    <service id=".abstract.Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClientInterface" class="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClientInterface" public="true" autowire="true" autoconfigure="true" abstract="true">
+    <service id=".abstract.Codevenom\FakturowniaBundle\Client\AbstractFakturowniaClient" class="Codevenom\FakturowniaBundle\Client\AbstractFakturowniaClient" public="true" autowire="true" autoconfigure="true" abstract="true">
       <tag name="container.excluded" source="because the class is abstract"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter" class="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter" public="true" autowire="true" autoconfigure="true">
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClient"/>
-      <argument type="service" id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Mapper\FakturowniaDtoMapper"/>
+    <service id=".abstract.Codevenom\FakturowniaBundle\Client\FakturowniaClientInterface" class="Codevenom\FakturowniaBundle\Client\FakturowniaClientInterface" public="true" autowire="true" autoconfigure="true" abstract="true">
+      <tag name="container.excluded" source="because the class is abstract"/>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Mapper\FakturowniaDtoMapper" class="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Mapper\FakturowniaDtoMapper" public="true" autowire="true" autoconfigure="true">
-      <tag name="container.error" message="Cannot autowire service &quot;Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Mapper\FakturowniaDtoMapper&quot;: argument &quot;$paymentStateResolver&quot; of method &quot;__construct()&quot; references class &quot;Codevenom\FakturowniaBundle\Domain\Strategy\PaymentStateResolver&quot; but no such service exists."/>
+    <service id="Codevenom\FakturowniaBundle\Client\InvoiceClient" class="Codevenom\FakturowniaBundle\Client\InvoiceClient" public="true" autowire="true" autoconfigure="true">
+      <argument>%env(FAKTUROWNIA_BASE_URL)%</argument>
+      <argument>%env(FAKTUROWNIA_API_TOKEN)%</argument>
+      <argument>10</argument>
+      <argument>%env(default::FAKTUROWNIA_SELLER_NAME)%</argument>
+      <argument type="service" id="Codevenom\FakturowniaBundle\Invoice\Mapper\InvoicePayloadMapper"/>
+    </service>
+    <service id="Codevenom\FakturowniaBundle\Facade\FakturowniaFacade" class="Codevenom\FakturowniaBundle\Facade\FakturowniaFacade" public="true" autowire="true" autoconfigure="true"/>
+    <service id=".abstract.Codevenom\FakturowniaBundle\Facade\FakturowniaFacadeInterface" class="Codevenom\FakturowniaBundle\Facade\FakturowniaFacadeInterface" public="true" autowire="true" autoconfigure="true" abstract="true">
+      <tag name="container.excluded" source="because the class is abstract"/>
+    </service>
+    <service id="Codevenom\FakturowniaBundle\Invoice\InvoiceManager" class="Codevenom\FakturowniaBundle\Invoice\InvoiceManager" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="Codevenom\FakturowniaBundle\Invoice\Service\InvoiceService"/>
+    </service>
+    <service id=".abstract.Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface" class="Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface" public="true" autowire="true" autoconfigure="true" abstract="true">
+      <tag name="container.excluded" source="because the class is abstract"/>
+    </service>
+    <service id="Codevenom\FakturowniaBundle\Invoice\Mapper\InvoicePayloadMapper" class="Codevenom\FakturowniaBundle\Invoice\Mapper\InvoicePayloadMapper" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="serializer"/>
+    </service>
+    <service id="Codevenom\FakturowniaBundle\Invoice\Service\InvoiceService" class="Codevenom\FakturowniaBundle\Invoice\Service\InvoiceService" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="Codevenom\FakturowniaBundle\Client\InvoiceClient"/>
+    </service>
+    <service id="Codevenom\FakturowniaBundle\Report\FakturowniaReportManager" class="Codevenom\FakturowniaBundle\Report\FakturowniaReportManager" public="true" autowire="true" autoconfigure="true"/>
+    <service id=".abstract.Codevenom\FakturowniaBundle\Report\FakturowniaReportManagerInterface" class="Codevenom\FakturowniaBundle\Report\FakturowniaReportManagerInterface" public="true" autowire="true" autoconfigure="true" abstract="true">
+      <tag name="container.excluded" source="because the class is abstract"/>
     </service>
     <service id=".service_locator.ryAvHi4" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -1524,6 +1892,7 @@
       <argument type="collection">
         <argument key="request_stack" type="service_closure" id="request_stack" on-invalid="ignore"/>
         <argument key="http_kernel" type="service_closure" id="http_kernel" on-invalid="ignore"/>
+        <argument key="serializer" type="service_closure" id="serializer" on-invalid="ignore"/>
         <argument key="parameter_bag" type="service_closure" id="parameter_bag" on-invalid="ignore"/>
       </argument>
     </service>
@@ -1567,6 +1936,16 @@
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="event_dispatcher" type="service_closure" id="debug.event_dispatcher"/>
+      </argument>
+    </service>
+    <service id=".service_locator.zfRA4vz" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="string" type="service_closure" id="type_info.resolver.string"/>
+        <argument key="ReflectionParameter" type="service_closure" id="type_info.resolver.reflection_parameter.phpdoc_aware"/>
+        <argument key="ReflectionProperty" type="service_closure" id="type_info.resolver.reflection_property.phpdoc_aware"/>
+        <argument key="ReflectionFunctionAbstract" type="service_closure" id="type_info.resolver.reflection_return.phpdoc_aware"/>
+        <argument key="ReflectionType" type="service_closure" id="type_info.resolver.reflection_type"/>
       </argument>
     </service>
     <service id="http_client.uri_template.inner" class="Symfony\Contracts\HttpClient\HttpClientInterface">
@@ -1717,6 +2096,13 @@
       <argument>false</argument>
       <argument type="service_closure" id="console.command.event_dispatcher_debug"/>
     </service>
+    <service id=".console.command.serializer_debug.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>debug:serializer</argument>
+      <argument type="collection"/>
+      <argument>Display serialization information for classes</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="console.command.serializer_debug"/>
+    </service>
     <service id=".console.command.yaml_lint.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>lint:yaml</argument>
       <argument type="collection"/>
@@ -1782,7 +2168,7 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.Lpugia_"/>
+      <argument type="service" id=".service_locator.zZBKbJh"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -1800,6 +2186,7 @@
         <argument key="debug:autowiring">console.command.debug_autowiring</argument>
         <argument key="debug:dotenv">console.command.dotenv_debug</argument>
         <argument key="debug:event-dispatcher">console.command.event_dispatcher_debug</argument>
+        <argument key="debug:serializer">console.command.serializer_debug</argument>
         <argument key="lint:yaml">console.command.yaml_lint</argument>
         <argument key="secrets:set">console.command.secrets_set</argument>
         <argument key="secrets:remove">console.command.secrets_remove</argument>
@@ -1811,7 +2198,7 @@
         <argument key="error:dump">console.command.error_dumper</argument>
       </argument>
     </service>
-    <service id=".service_locator.Lpugia_" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.zZBKbJh" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
@@ -1830,6 +2217,7 @@
         <argument key="console.command.debug_autowiring" type="service_closure" id=".console.command.debug_autowiring.lazy"/>
         <argument key="console.command.dotenv_debug" type="service_closure" id=".console.command.dotenv_debug.lazy"/>
         <argument key="console.command.event_dispatcher_debug" type="service_closure" id=".console.command.event_dispatcher_debug.lazy"/>
+        <argument key="console.command.serializer_debug" type="service_closure" id=".console.command.serializer_debug.lazy"/>
         <argument key="console.command.yaml_lint" type="service_closure" id=".console.command.yaml_lint.lazy"/>
         <argument key="console.command.secrets_set" type="service_closure" id=".console.command.secrets_set.lazy"/>
         <argument key="console.command.secrets_remove" type="service_closure" id=".console.command.secrets_remove.lazy"/>
@@ -1841,7 +2229,6 @@
         <argument key="console.command.error_dumper" type="service_closure" id=".console.command.error_dumper.lazy"/>
       </argument>
     </service>
-    <service id="Codevenom\FakturowniaBundle\Domain\Event\DomainEventDispatcherInterface" alias="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Event\InMemoryDomainEventDispatcher" public="true"/>
     <service id="Symfony\Bundle\FrameworkBundle\Controller\ControllerHelper" alias="controller.helper"/>
     <service id="Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface" alias="parameter_bag"/>
     <service id="Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface" alias="parameter_bag"/>
@@ -1863,7 +2250,7 @@
     <service id="error_renderer.html" alias="error_handler.error_renderer.html"/>
     <service id="error_renderer.cli" alias="error_handler.error_renderer.cli"/>
     <service id="error_renderer.default" alias="error_handler.error_renderer.default"/>
-    <service id="error_renderer" alias="error_handler.error_renderer.default"/>
+    <service id="error_renderer" alias="error_handler.error_renderer.serializer"/>
     <service id=".Psr\Container\ContainerInterface $parameter_bag" alias="parameter_bag"/>
     <service id="Psr\Container\ContainerInterface $parameterBag" alias="parameter_bag"/>
     <service id="cache.adapter.valkey" alias="cache.adapter.redis"/>
@@ -1876,6 +2263,25 @@
     <service id="Symfony\Contracts\HttpClient\HttpClientInterface" alias="http_client.uri_template"/>
     <service id="Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter" alias="debug.file_link_formatter"/>
     <service id="Symfony\Component\Stopwatch\Stopwatch" alias="debug.stopwatch"/>
+    <service id="Symfony\Component\PropertyAccess\PropertyAccessorInterface" alias="property_accessor"/>
+    <service id="Symfony\Component\Serializer\SerializerInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Normalizer\NormalizerInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Normalizer\DenormalizerInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Encoder\EncoderInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Encoder\DecoderInterface" alias="serializer"/>
+    <service id="serializer.property_accessor" alias="property_accessor"/>
+    <service id="Symfony\Component\Serializer\Mapping\ClassDiscriminatorResolverInterface" alias="serializer.mapping.class_discriminator_resolver"/>
+    <service id="Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface" alias="serializer.mapping.class_metadata_factory"/>
+    <service id="error_renderer.serializer" alias="error_handler.error_renderer.serializer"/>
+    <service id="Symfony\Component\TypeInfo\TypeResolver\TypeResolverInterface" alias="type_info.resolver"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyDescriptionExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyListExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface" alias="property_info.reflection_extractor"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface" alias="property_info.reflection_extractor"/>
     <service id="Symfony\Component\Uid\Factory\UlidFactory" alias="ulid.factory"/>
     <service id="Symfony\Component\Uid\Factory\UuidFactory" alias="uuid.factory"/>
     <service id="Symfony\Component\Uid\Factory\NameBasedUuidFactory" alias="name_based_uuid.factory"/>
@@ -1885,9 +2291,8 @@
     <service id="cache.default_valkey_provider" alias=".cache_connection.H8vabc8"/>
     <service id="cache.default_memcached_provider" alias=".cache_connection.8kvDmRs"/>
     <service id="cache.default_doctrine_dbal_provider" alias="database_connection"/>
-    <service id="Codevenom\FakturowniaBundle\Domain\Contract\Port\FakturowniaGatewayInterface" alias="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Adapter\FakturowniaGatewayAdapter" public="true"/>
-    <service id="Codevenom\FakturowniaBundle\Domain\Contract\FakturowniaInterface" alias="Codevenom\FakturowniaBundle\Application\FakturowniaService" public="true"/>
-    <service id="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClientInterface" alias="Codevenom\FakturowniaBundle\Infrastructure\FakturowniaApi\Http\FakturowniaClient"/>
+    <service id="Codevenom\FakturowniaBundle\Client\FakturowniaClientInterface" alias="Codevenom\FakturowniaBundle\Client\InvoiceClient" public="true"/>
+    <service id="Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface" alias="Codevenom\FakturowniaBundle\Invoice\InvoiceManager" public="true"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="argument_resolver.controller_locator" alias=".service_locator.dpiLQ5O"/>
     <service id="Psr\Log\LoggerInterface" alias="logger"/>
@@ -1895,6 +2300,6 @@
     <service id="event_dispatcher" alias="debug.event_dispatcher" public="true"/>
     <service id="controller_resolver" alias="debug.controller_resolver"/>
     <service id="argument_resolver" alias="debug.argument_resolver"/>
-    <service id=".service_locator.WTl5Jsa" alias=".service_locator.TJNRSaV"/>
+    <service id=".service_locator.z_prYf7" alias=".service_locator.TJNRSaV"/>
   </services>
 </container>

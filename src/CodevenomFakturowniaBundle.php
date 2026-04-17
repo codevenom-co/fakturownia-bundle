@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Codevenom\FakturowniaBundle;
 
-use Codevenom\FakturowniaBundle\Infrastructure\DependencyInjection\CodevenomFakturowniaExtension;
+use Codevenom\FakturowniaBundle\DependencyInjection\CodevenomFakturowniaExtension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

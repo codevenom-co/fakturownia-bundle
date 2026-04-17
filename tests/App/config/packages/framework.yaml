@@ -1,0 +1,5 @@
+framework:
+  secret: 'test_secret'
+  test: true
+  http_client:
+    enabled: true

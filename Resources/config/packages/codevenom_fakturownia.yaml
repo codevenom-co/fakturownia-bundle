@@ -1,0 +1,5 @@
+codevenom_fakturownia:
+  base_url: '%env(FAKTUROWNIA_BASE_URL)%'
+  api_token: '%env(FAKTUROWNIA_API_TOKEN)%'
+  seller_name: '%env(default::FAKTUROWNIA_SELLER_NAME)%'
+  downloads_path: '%kernel.project_dir%/var/fakturownia'
