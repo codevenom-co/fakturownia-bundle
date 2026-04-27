@@ -1,0 +1,42 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  Codevenom\FakturowniaBundle\:
+    resource: '../../*'
+    exclude:
+      - '../../DependencyInjection/'
+      - '../../CodevenomFakturowniaBundle.php'
+      - '../../Invoice/Model/'
+      - '../../Invoice/Enum/'
+      - '../../Invoice/Factory/'
+      - '../../Report/Model/'
+      - '../../Report/Factory/'
+      - '../../Exception/'
+      - '../../Shared/Mapper/'
+      - '../../Invoice/MCP/*/*Input.php'
+
+
+  Codevenom\FakturowniaBundle\Invoice\MCP\:
+    resource: '../../Invoice/MCP/*/*Tool.php'
+    autowire: true
+    autoconfigure: true
+    tags: ['mcp.tool']
+
+
+  # Concrete client with params
+  Codevenom\FakturowniaBundle\Client\InvoiceClient:
+    arguments:
+      $baseUrl: '%codevenom_fakturownia.base_url%'
+      $apiToken: '%codevenom_fakturownia.api_token%'
+      $sellerName: '%codevenom_fakturownia.seller_name%'
+      $sellerTaxId: '%codevenom_fakturownia.seller_tax_id%'
+      $timeout: '%codevenom_fakturownia.timeout%'
+
+  Codevenom\FakturowniaBundle\Client\FakturowniaClientInterface:
+    alias: Codevenom\FakturowniaBundle\Client\InvoiceClient
+
+  Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface:
+    alias: Codevenom\FakturowniaBundle\Invoice\InvoiceManager

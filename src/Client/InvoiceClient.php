@@ -7,6 +7,7 @@ use Codevenom\FakturowniaBundle\Exception\InvoiceCreationFailedException;
 use Codevenom\FakturowniaBundle\Exception\InvoiceNotFoundException;
 use Codevenom\FakturowniaBundle\Exception\UnableToRetrieveInvoicesForProvidedPeriodException;
 use Codevenom\FakturowniaBundle\Invoice\Enum\InvoicePeriod;
+use Codevenom\FakturowniaBundle\Invoice\Mapper\CreateInvoicePayloadMapper;
 use Codevenom\FakturowniaBundle\Invoice\Mapper\InvoicePayloadMapper;
 use Codevenom\FakturowniaBundle\Invoice\Model\CreateInvoice;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
@@ -23,11 +24,13 @@ class InvoiceClient extends AbstractFakturowniaClient implements FakturowniaClie
 {
 
     public function __construct(
-        string                                $baseUrl,
-        string                                $apiToken,
-        int                                   $timeout,
-        private readonly string               $sellerName,
-        private readonly InvoicePayloadMapper $invoicePayloadMapper
+        string                                      $baseUrl,
+        string                                      $apiToken,
+        int                                         $timeout,
+        private readonly string                     $sellerName,
+        private readonly string                     $sellerTaxId,
+        private readonly InvoicePayloadMapper       $invoicePayloadMapper,
+        private readonly CreateInvoicePayloadMapper $createInvoicePayloadMapper,
     )
     {
         parent::__construct(
@@ -50,12 +53,19 @@ class InvoiceClient extends AbstractFakturowniaClient implements FakturowniaClie
     public function createInvoice(CreateInvoice $request): Invoice
     {
         $request->setSellerName($this->sellerName);
-        $httpPayload = $this->invoicePayloadMapper->toPayload($request);
-        $response = $this->sendRequest('POST', '/invoices.json', $httpPayload);
+        $request->setSellerTaxNo($this->sellerTaxId);
+
+        $jsonPayload = $this->createInvoicePayloadMapper->toPayload($request);
+        $response = $this->post('/invoices.json', $jsonPayload);
 
         if ($response->getStatusCode() !== Response::HTTP_CREATED) {
-            throw new InvoiceCreationFailedException(sprintf('Invoice creation failed with status code %s: %s', $response->getStatusCode(), $response->getContent(false)));
+            throw new InvoiceCreationFailedException(sprintf(
+                'Invoice creation failed with status code %s: %s',
+                $response->getStatusCode(),
+                $response->getContent(false),
+            ));
         }
+
         return $this->invoicePayloadMapper->toModel($response->toArray());
     }
 
@@ -74,14 +84,13 @@ class InvoiceClient extends AbstractFakturowniaClient implements FakturowniaClie
      */
     public function findByPeriod(InvoicePeriod $period, int $page, int $perPage, bool $income = true): array
     {
-        $response = $this->sendRequest('GET', '/invoices.json', [
-            'query' => [
+        $response = $this->get('/invoices.json',
+            query: [
                 'period' => $period->value,
                 'page' => $page,
                 'per_page' => $perPage,
                 'income' => $income ? 'yes' : 'no',
-            ],
-        ]);
+            ]);
 
         if ($response->getStatusCode() !== Response::HTTP_OK) {
             throw UnableToRetrieveInvoicesForProvidedPeriodException::withPeriod($period);
@@ -93,21 +102,48 @@ class InvoiceClient extends AbstractFakturowniaClient implements FakturowniaClie
     /**
      * @param string $id
      * @return Invoice
-     * @throws TransportExceptionInterface
-     * @throws ExceptionInterface
      * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function findById(string $id): Invoice
     {
-        $response = $this->sendRequest('GET', sprintf('/invoices/%s.json', $id));
+        $response = $this->get(sprintf('/invoices/%s.json', $id));
 
         if ($response->getStatusCode() !== Response::HTTP_NOT_FOUND) {
-            throw new InvoiceNotFoundException(sprintf('Error while fetching invoice with id %s: %s', $id, $response->getContent(false)));
+            throw InvoiceNotFoundException::withId($id);
         }
         return $this->invoicePayloadMapper->toModel($response->toArray());
     }
+
+    public function findByNumber(string $number, bool $income = true): ?Invoice
+    {
+        $response = $this->get('/invoices.json',
+            query: [
+                'number' => $number,
+                'income' => $income ? 'yes' : 'no',
+            ]);
+
+        if ($response->getStatusCode() !== Response::HTTP_OK) {
+            throw InvoiceNotFoundException::withNumber($number);
+        }
+
+        $invoices = array_map(fn(array $invoiceData): Invoice => $this->invoicePayloadMapper->toModel($invoiceData), $response->toArray());
+
+        if (count($invoices) > 1) {
+            throw InvoiceNotFoundException::withNumber($number);
+        }
+
+        if ($invoices[0]->getNumber() === null) {
+            throw InvoiceNotFoundException::withNumber($number);
+        }
+
+        return $invoices[0];
+    }
+
 
     /**
      * @param string $id

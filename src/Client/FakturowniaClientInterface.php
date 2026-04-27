@@ -20,6 +20,14 @@ interface FakturowniaClientInterface
      */
     public function findById(string $id): Invoice;
 
+
+    /**
+     * @param string $number
+     * @param bool $income
+     * @return Invoice|null
+     */
+    public function findByNumber(string $number, bool $income = true): ?Invoice;
+
     /**
      * @param InvoicePeriod $period
      * @param int $page

@@ -45,4 +45,9 @@ readonly final class InvoiceService
     {
         return $this->client->findById($id);
     }
+
+    public function findByNumber(string $number, bool $income = true): ?Invoice
+    {
+        return $this->client->findByNumber($number, $income);
+    }
 }

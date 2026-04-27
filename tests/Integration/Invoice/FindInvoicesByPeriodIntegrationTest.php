@@ -7,19 +7,24 @@ namespace Codevenom\FakturowniaBundle\Tests\Integration\Invoice;
 use Codevenom\FakturowniaBundle\Invoice\Enum\InvoicePeriod;
 use Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
+use Codevenom\FakturowniaBundle\Tests\Util\Trait\FakturowniaTestCredentialsTrait;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 #[Group('integration')]
 final class FindInvoicesByPeriodIntegrationTest extends KernelTestCase
 {
+
+    use FakturowniaTestCredentialsTrait;
+
     private ?InvoiceManagerInterface $invoiceManager = null;
 
+    /**
+     * @throws \Exception
+     */
     protected function setUp(): void
     {
-        if (!getenv('FAKTUROWNIA_API_TOKEN')) {
-            self::markTestSkipped('Integration test skipped: missing env FAKTUROWNIA_API_TOKEN.');
-        }
+        $this->verifyTestCredentials();
 
         self::bootKernel();
 
@@ -29,7 +34,7 @@ final class FindInvoicesByPeriodIntegrationTest extends KernelTestCase
     public function testItRetrievesInvoicesForProvidedPeriod(): void
     {
         $result = $this->invoiceManager->findByPeriod(
-            period: InvoicePeriod::LAST_MONTH,
+            period: InvoicePeriod::THIS_YEAR,
             page: 1,
             perPage: 5,
             income: true,
@@ -39,6 +44,8 @@ final class FindInvoicesByPeriodIntegrationTest extends KernelTestCase
 
         foreach ($result as $item) {
             self::assertInstanceOf(Invoice::class, $item);
+            self::assertEquals($item->getSellerName(), $this->getSellerName());
+            self::assertEquals($item->getSellerTaxNo(), $this->getSellerTaxId());
         }
     }
 }

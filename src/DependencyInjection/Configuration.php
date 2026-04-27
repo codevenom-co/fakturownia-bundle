@@ -18,6 +18,7 @@ final class Configuration implements ConfigurationInterface
             ->scalarNode('base_url')->cannotBeEmpty()->end()
             ->scalarNode('api_token')->cannotBeEmpty()->end()
             ->scalarNode('seller_name')->defaultValue('')->end()
+            ->scalarNode('seller_tax_id')->defaultValue('')->end()
             ->scalarNode('downloads_path')->defaultValue('%kernel.project_dir%/var/fakturownia')->end()
             ->integerNode('timeout')->min(1)->defaultValue(10)->end()
             ->end()

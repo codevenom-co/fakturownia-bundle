@@ -45,4 +45,9 @@ readonly class InvoiceManager implements InvoiceManagerInterface
     {
         return $this->invoiceService->findById($id);
     }
+
+    public function findByNumber(string $number, bool $income = true): ?Invoice
+    {
+        return $this->invoiceService->findByNumber($number, $income);
+    }
 }

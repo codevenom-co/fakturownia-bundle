@@ -3,6 +3,7 @@
 namespace Codevenom\FakturowniaBundle\Shared\Mapper;
 
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 abstract class AbstractPayloadMapper
@@ -19,7 +20,9 @@ abstract class AbstractPayloadMapper
      */
     protected function convertToPayload(object $model): array
     {
-        return $this->serializer->normalize($model);
+        return $this->serializer->normalize($model, 'json', [
+            AbstractObjectNormalizer::SKIP_NULL_VALUES => true
+        ]);
     }
 
     /**

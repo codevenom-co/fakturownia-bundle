@@ -61,12 +61,14 @@
     <parameter key="debug.error_handler.throw_at">-1</parameter>
     <parameter key="debug.container.dump">/app/var/cache/test/Codevenom_FakturowniaBundle_Tests_App_TestKernelTestDebugContainer.xml</parameter>
     <parameter key="serializer.mapping.cache.file">/app/var/cache/test/serialization.php</parameter>
+    <parameter key=".serializer.name_converter">serializer.name_converter.camel_case_to_snake_case</parameter>
     <parameter key=".serializer.named_serializers" type="collection"/>
     <parameter key="cache.prefix.seed">_/app.Codevenom_FakturowniaBundle_Tests_App_TestKernelTestDebugContainer</parameter>
     <parameter key="data_collector.templates" type="collection"/>
     <parameter key="codevenom_fakturownia.base_url">%env(FAKTUROWNIA_BASE_URL)%</parameter>
     <parameter key="codevenom_fakturownia.api_token">%env(FAKTUROWNIA_API_TOKEN)%</parameter>
     <parameter key="codevenom_fakturownia.seller_name">%env(default::FAKTUROWNIA_SELLER_NAME)%</parameter>
+    <parameter key="codevenom_fakturownia.seller_tax_id">%env(default::FAKTUROWNIA_SELLER_TAX_ID)%</parameter>
     <parameter key="codevenom_fakturownia.downloads_path">/app/var/fakturownia</parameter>
     <parameter key="codevenom_fakturownia.timeout">10</parameter>
     <parameter key="console.command.ids" type="collection"/>
@@ -1582,6 +1584,7 @@
     </service>
     <service id="serializer.name_converter.metadata_aware" class="Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter">
       <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+      <argument type="service" id="serializer.name_converter.camel_case_to_snake_case"/>
     </service>
     <service id="property_info.serializer_extractor" class="Symfony\Component\PropertyInfo\Extractor\SerializerExtractor">
       <tag name="property_info.list_extractor" priority="-999"/>
@@ -1774,7 +1777,9 @@
       <argument>%env(FAKTUROWNIA_API_TOKEN)%</argument>
       <argument>10</argument>
       <argument>%env(default::FAKTUROWNIA_SELLER_NAME)%</argument>
+      <argument>%env(default::FAKTUROWNIA_SELLER_TAX_ID)%</argument>
       <argument type="service" id="Codevenom\FakturowniaBundle\Invoice\Mapper\InvoicePayloadMapper"/>
+      <argument type="service" id="Codevenom\FakturowniaBundle\Invoice\Mapper\CreateInvoicePayloadMapper"/>
     </service>
     <service id="Codevenom\FakturowniaBundle\Facade\FakturowniaFacade" class="Codevenom\FakturowniaBundle\Facade\FakturowniaFacade" public="true" autowire="true" autoconfigure="true"/>
     <service id=".abstract.Codevenom\FakturowniaBundle\Facade\FakturowniaFacadeInterface" class="Codevenom\FakturowniaBundle\Facade\FakturowniaFacadeInterface" public="true" autowire="true" autoconfigure="true" abstract="true">
@@ -1785,6 +1790,9 @@
     </service>
     <service id=".abstract.Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface" class="Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface" public="true" autowire="true" autoconfigure="true" abstract="true">
       <tag name="container.excluded" source="because the class is abstract"/>
+    </service>
+    <service id="Codevenom\FakturowniaBundle\Invoice\Mapper\CreateInvoicePayloadMapper" class="Codevenom\FakturowniaBundle\Invoice\Mapper\CreateInvoicePayloadMapper" public="true" autowire="true" autoconfigure="true">
+      <argument type="service" id="serializer"/>
     </service>
     <service id="Codevenom\FakturowniaBundle\Invoice\Mapper\InvoicePayloadMapper" class="Codevenom\FakturowniaBundle\Invoice\Mapper\InvoicePayloadMapper" public="true" autowire="true" autoconfigure="true">
       <argument type="service" id="serializer"/>

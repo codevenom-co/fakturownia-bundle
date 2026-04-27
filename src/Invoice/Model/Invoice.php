@@ -1,181 +1,330 @@
 <?php
 
-namespace Codevenom\FakturowniaBundle\Invoice\Model;;
+namespace Codevenom\FakturowniaBundle\Invoice\Model;
+
+use Symfony\Component\Serializer\Attribute\SerializedName;
+
+;
 
 class Invoice
 {
     public function __construct(
-        private ?int $id,
-        private ?int $userId,
-        private mixed $app,
-        private ?string $number,
-        private mixed $place,
-        private ?string $sellDate,
-        private mixed $paymentType,
-        private ?string $priceNet,
-        private ?string $priceGross,
-        private ?string $currency,
-        private ?string $status,
-        private mixed $description,
-        private ?string $sellerName,
-        private ?string $sellerTaxNo,
-        private mixed $sellerStreet,
-        private mixed $sellerPostCode,
-        private mixed $sellerCity,
-        private mixed $sellerCountry,
-        private mixed $sellerEmail,
-        private mixed $sellerPhone,
-        private mixed $sellerFax,
-        private mixed $sellerWww,
-        private mixed $sellerPerson,
-        private mixed $sellerBank,
-        private ?string $sellerBankAccount,
-        private ?string $buyerName,
-        private ?string $buyerTaxNo,
-        private mixed $buyerPostCode,
-        private mixed $buyerCity,
-        private mixed $buyerStreet,
-        private mixed $buyerFirstName,
-        private mixed $buyerCountry,
-        private ?string $createdAt,
-        private ?string $updatedAt,
-        private ?string $token,
-        private mixed $buyerEmail,
-        private mixed $buyerWww,
-        private mixed $buyerFax,
-        private mixed $buyerPhone,
-        private ?string $kind,
-        private ?string $pattern,
-        private mixed $patternNr,
-        private ?int $patternNrM,
-        private mixed $patternNrD,
-        private ?int $clientId,
-        private ?string $paymentTo,
-        private ?string $paid,
-        private mixed $sellerBankAccountId,
-        private ?string $lang,
-        private ?string $issueDate,
-        private ?string $priceTax,
-        private ?int $departmentId,
-        private mixed $correction,
-        private mixed $buyerNote,
-        private mixed $additionalInfoDesc,
-        private ?bool $additionalInfo,
-        private ?string $productCache,
-        private mixed $buyerLastName,
-        private mixed $fromInvoiceId,
-        private mixed $oid,
-        private ?string $discount,
-        private ?bool $showDiscount,
-        private mixed $sentTime,
-        private mixed $printTime,
-        private mixed $recurringId,
-        private mixed $tax2Visible,
-        private mixed $warehouseId,
-        private mixed $paidDate,
-        private ?int $productId,
-        private ?int $issueYear,
-        private mixed $internalNote,
-        private mixed $invoiceId,
-        private ?int $invoiceTemplateId,
-        private mixed $descriptionLong,
-        private mixed $buyerTaxNoKind,
-        private mixed $sellerTaxNoKind,
-        private mixed $descriptionFooter,
-        private mixed $sellDateKind,
-        private ?string $paymentToKind,
-        private mixed $exchangeCurrency,
-        private ?string $discountKind,
-        private ?bool $income,
-        private ?bool $fromApi,
-        private mixed $categoryId,
-        private mixed $warehouseDocumentId,
-        private ?string $exchangeKind,
-        private ?string $exchangeRate,
-        private ?bool $useDeliveryAddress,
-        private mixed $deliveryAddress,
-        private mixed $accountingKind,
-        private ?string $buyerPerson,
-        private mixed $buyerBankAccount,
-        private mixed $buyerBank,
-        private mixed $buyerMassPaymentCode,
-        private ?string $exchangeNote,
-        private ?bool $buyerCompany,
-        private ?bool $showAttachments,
-        private mixed $exchangeCurrencyRate,
-        private ?bool $hasAttachments,
-        private mixed $exchangeDate,
-        private ?int $attachmentsCount,
-        private ?string $deliveryDate,
-        private mixed $fiscalStatus,
-        private ?bool $useMoss,
-        private ?array $calculatingStrategy,
-        private ?string $transactionDate,
-        private mixed $emailStatus,
-        private ?bool $excludeFromStockLevel,
-        private ?bool $excludeFromAccounting,
-        private ?string $exchangeRateDen,
-        private ?string $exchangeCurrencyRateDen,
-        private mixed $accountingScheme,
-        private ?string $exchangeDifference,
-        private ?bool $notCost,
-        private ?bool $reverseCharge,
-        private mixed $issuer,
-        private ?bool $useIssuer,
-        private ?bool $cancelled,
-        private mixed $recipientId,
-        private ?string $recipientName,
-        private ?bool $test,
-        private ?string $discountNet,
-        private mixed $approvalStatus,
-        private ?string $accountingVatTaxDate,
-        private ?string $accountingIncomeTaxDate,
-        private mixed $accountingOtherTaxDate,
-        private mixed $accountingStatus,
-        private mixed $normalizedNumber,
-        private mixed $naTaxKind,
-        private ?bool $issuedToReceipt,
-        private mixed $govId,
-        private mixed $govKind,
-        private mixed $govStatus,
-        private ?string $salesCode,
-        private mixed $additionalInvoiceField,
-        private mixed $productsMargin,
-        private ?string $paymentUrl,
-        private ?string $viewUrl,
-        private mixed $buyerMobilePhone,
-        private ?string $kindText,
-        private mixed $invoiceForReceiptId,
-        private mixed $receiptForInvoiceId,
-        private mixed $recipientCompany,
-        private mixed $recipientFirstName,
-        private mixed $recipientLastName,
-        private mixed $recipientTaxNo,
-        private mixed $recipientStreet,
-        private mixed $recipientPostCode,
-        private mixed $recipientCity,
-        private mixed $recipientCountry,
-        private mixed $recipientEmail,
-        private mixed $recipientPhone,
-        private mixed $recipientNote,
-        private ?bool $overdue,
-        private ?string $getTaxName,
-        private ?bool $taxVisible,
-        private ?string $taxNameType,
-        private ?bool $useOss,
-        private ?string $adjustInvoicePrice,
-        private ?bool $checkFiscalPrint,
-        private ?bool $fiscalPrintError,
-        private mixed $sellerBdoNo,
-        private mixed $splitPayment,
-        private ?array $gtuCodes,
-        private ?array $procedureDesignations,
-        private ?array $positions,
-        private ?array $issuers,
-        private ?array $recipients,
+        private ?int $id= null,
+        #[SerializedName('user_id')]
+        private ?int $userId= null,
+        private mixed $app= null,
+        private ?string $number= null,
+        private mixed $place= null,
+        #[SerializedName('sell_date')]
+        private ?string $sellDate= null,
+        #[SerializedName('payment_type')]
+        private mixed $paymentType= null,
+        #[SerializedName('price_net')]
+        private ?string $priceNet= null,
+        #[SerializedName('price_gross')]
+        private ?string $priceGross= null,
+        private ?string $currency= null,
+        private ?string $status= null,
+        private mixed $description= null,
+        #[SerializedName('seller_name')]
+        private ?string $sellerName= null,
+        #[SerializedName('seller_tax_no')]
+        private ?string $sellerTaxNo= null,
+        #[SerializedName('seller_street')]
+        private mixed $sellerStreet= null,
+        #[SerializedName('seller_post_code')]
+        private mixed $sellerPostCode= null,
+        #[SerializedName('seller_city')]
+        private mixed $sellerCity= null,
+        #[SerializedName('seller_country')]
+        private mixed $sellerCountry= null,
+        #[SerializedName('seller_email')]
+        private mixed $sellerEmail= null,
+        #[SerializedName('seller_phone')]
+        private mixed $sellerPhone= null,
+        #[SerializedName('seller_fax')]
+        private mixed $sellerFax= null,
+        #[SerializedName('seller_www')]
+        private mixed $sellerWww= null,
+        #[SerializedName('seller_person')]
+        private mixed $sellerPerson= null,
+        #[SerializedName('seller_bank')]
+        private mixed $sellerBank= null,
+        #[SerializedName('seller_bank_account')]
+        private ?string $sellerBankAccount= null,
+        #[SerializedName('buyer_name')]
+        private ?string $buyerName= null,
+        #[SerializedName('buyer_tax_no')]
+        private ?string $buyerTaxNo= null,
+        #[SerializedName('buyer_post_code')]
+        private mixed $buyerPostCode= null,
+        #[SerializedName('buyer_city')]
+        private mixed $buyerCity= null,
+        #[SerializedName('buyer_street')]
+        private mixed $buyerStreet= null,
+        #[SerializedName('buyer_first_name')]
+        private mixed $buyerFirstName= null,
+        #[SerializedName('buyer_country')]
+        private mixed $buyerCountry= null,
+        #[SerializedName('created_at')]
+        private ?string $createdAt= null,
+        #[SerializedName('updated_at')]
+        private ?string $updatedAt= null,
+        private ?string $token= null,
+        #[SerializedName('buyer_email')]
+        private mixed $buyerEmail= null,
+        #[SerializedName('buyer_www')]
+        private mixed $buyerWww= null,
+        #[SerializedName('buyer_fax')]
+        private mixed $buyerFax= null,
+        #[SerializedName('buyer_phone')]
+        private mixed $buyerPhone= null,
+        private ?string $kind= null,
+        private ?string $pattern= null,
+        #[SerializedName('pattern_nr')]
+        private mixed $patternNr= null,
+        #[SerializedName('pattern_nr_m')]
+        private ?int $patternNrM= null,
+        #[SerializedName('pattern_nr_d')]
+        private mixed $patternNrD= null,
+        #[SerializedName('client_id')]
+        private ?int $clientId= null,
+        #[SerializedName('payment_to')]
+        private ?string $paymentTo= null,
+        private ?string $paid= null,
+        #[SerializedName('seller_bank_account_id')]
+        private mixed $sellerBankAccountId= null,
+        private ?string $lang= null,
+        #[SerializedName('issue_date')]
+        private ?string $issueDate= null,
+        #[SerializedName('price_tax')]
+        private ?string $priceTax= null,
+        #[SerializedName('department_id')]
+        private ?int $departmentId= null,
+        private mixed $correction= null,
+        #[SerializedName('buyer_note')]
+        private mixed $buyerNote= null,
+        #[SerializedName('additional_info_desc')]
+        private mixed $additionalInfoDesc= null,
+        #[SerializedName('additional_info')]
+        private ?bool $additionalInfo= null,
+        #[SerializedName('product_cache')]
+        private ?string $productCache= null,
+        #[SerializedName('buyer_last_name')]
+        private mixed $buyerLastName= null,
+        #[SerializedName('from_invoice_id')]
+        private mixed $fromInvoiceId= null,
+        private mixed $oid= null,
+        private ?string $discount= null,
+        #[SerializedName('show_discount')]
+        private ?bool $showDiscount= null,
+        #[SerializedName('sent_time')]
+        private mixed $sentTime= null,
+        #[SerializedName('print_time')]
+        private mixed $printTime= null,
+        #[SerializedName('recurring_id')]
+        private mixed $recurringId= null,
+        #[SerializedName('tax2_visible')]
+        private mixed $tax2Visible= null,
+        #[SerializedName('warehouse_id')]
+        private mixed $warehouseId= null,
+        #[SerializedName('paid_date')]
+        private mixed $paidDate= null,
+        #[SerializedName('product_id')]
+        private ?int $productId= null,
+        #[SerializedName('issue_year')]
+        private ?int $issueYear= null,
+        #[SerializedName('internal_note')]
+        private mixed $internalNote= null,
+        #[SerializedName('invoice_id')]
+        private mixed $invoiceId= null,
+        #[SerializedName('invoice_template_id')]
+        private ?int $invoiceTemplateId= null,
+        #[SerializedName('description_long')]
+        private mixed $descriptionLong= null,
+        #[SerializedName('buyer_tax_no_kind')]
+        private mixed $buyerTaxNoKind= null,
+        #[SerializedName('seller_tax_no_kind')]
+        private mixed $sellerTaxNoKind= null,
+        #[SerializedName('description_footer')]
+        private mixed $descriptionFooter= null,
+        #[SerializedName('sell_date_kind')]
+        private mixed $sellDateKind= null,
+        #[SerializedName('payment_to_kind')]
+        private ?string $paymentToKind= null,
+        #[SerializedName('exchange_currency')]
+        private mixed $exchangeCurrency= null,
+        #[SerializedName('discount_kind')]
+        private ?string $discountKind= null,
+        private ?bool $income= null,
+        #[SerializedName('from_api')]
+        private ?bool $fromApi= null,
+        #[SerializedName('category_id')]
+        private mixed $categoryId= null,
+        #[SerializedName('warehouse_document_id')]
+        private mixed $warehouseDocumentId= null,
+        #[SerializedName('exchange_kind')]
+        private ?string $exchangeKind= null,
+        #[SerializedName('exchange_rate')]
+        private ?string $exchangeRate= null,
+        #[SerializedName('use_delivery_address')]
+        private ?bool $useDeliveryAddress= null,
+        #[SerializedName('delivery_address')]
+        private mixed $deliveryAddress= null,
+        #[SerializedName('accounting_kind')]
+        private mixed $accountingKind= null,
+        #[SerializedName('buyer_person')]
+        private ?string $buyerPerson= null,
+        #[SerializedName('buyer_bank_account')]
+        private mixed $buyerBankAccount= null,
+        #[SerializedName('buyer_bank')]
+        private mixed $buyerBank= null,
+        #[SerializedName('buyer_mass_payment_code')]
+        private mixed $buyerMassPaymentCode= null,
+        #[SerializedName('exchange_note')]
+        private ?string $exchangeNote= null,
+        #[SerializedName('buyer_company')]
+        private ?bool $buyerCompany= null,
+        #[SerializedName('show_attachments')]
+        private ?bool $showAttachments= null,
+        #[SerializedName('exchange_currency_rate')]
+        private mixed $exchangeCurrencyRate= null,
+        #[SerializedName('has_attachments')]
+        private ?bool $hasAttachments= null,
+        #[SerializedName('exchange_date')]
+        private mixed $exchangeDate= null,
+        #[SerializedName('attachments_count')]
+        private ?int $attachmentsCount= null,
+        #[SerializedName('delivery_date')]
+        private ?string $deliveryDate= null,
+        #[SerializedName('fiscal_status')]
+        private mixed $fiscalStatus= null,
+        #[SerializedName('use_moss')]
+        private ?bool $useMoss= null,
+        #[SerializedName('calculating_strategy')]
+        private ?array $calculatingStrategy= null,
+        #[SerializedName('transaction_date')]
+        private ?string $transactionDate= null,
+        #[SerializedName('email_status')]
+        private mixed $emailStatus= null,
+        #[SerializedName('exclude_from_stock_level')]
+        private ?bool $excludeFromStockLevel= null,
+        #[SerializedName('exclude_from_accounting')]
+        private ?bool $excludeFromAccounting= null,
+        #[SerializedName('exchange_rate_den')]
+        private ?string $exchangeRateDen= null,
+        #[SerializedName('exchange_currency_rate_den')]
+        private ?string $exchangeCurrencyRateDen= null,
+        #[SerializedName('accounting_scheme')]
+        private mixed $accountingScheme= null,
+        #[SerializedName('exchange_difference')]
+        private ?string $exchangeDifference= null,
+        #[SerializedName('not_cost')]
+        private ?bool $notCost= null,
+        #[SerializedName('reverse_charge')]
+        private ?bool $reverseCharge= null,
+        private mixed $issuer= null,
+        #[SerializedName('use_issuer')]
+        private ?bool $useIssuer= null,
+        private ?bool $cancelled= null,
+        #[SerializedName('recipient_id')]
+        private mixed $recipientId= null,
+        #[SerializedName('recipient_name')]
+        private ?string $recipientName= null,
+        private ?bool $test= null,
+        #[SerializedName('discount_net')]
+        private ?string $discountNet= null,
+        #[SerializedName('approval_status')]
+        private mixed $approvalStatus= null,
+        #[SerializedName('accounting_vat_tax_date')]
+        private ?string $accountingVatTaxDate= null,
+        #[SerializedName('accounting_income_tax_date')]
+        private ?string $accountingIncomeTaxDate= null,
+        #[SerializedName('accounting_other_tax_date')]
+        private mixed $accountingOtherTaxDate= null,
+        #[SerializedName('accounting_status')]
+        private mixed $accountingStatus= null,
+        #[SerializedName('normalized_number')]
+        private mixed $normalizedNumber= null,
+        #[SerializedName('na_tax_kind')]
+        private mixed $naTaxKind= null,
+        #[SerializedName('issued_to_receipt')]
+        private ?bool $issuedToReceipt= null,
+        #[SerializedName('gov_id')]
+        private mixed $govId= null,
+        #[SerializedName('gov_kind')]
+        private mixed $govKind= null,
+        #[SerializedName('gov_status')]
+        private mixed $govStatus= null,
+        #[SerializedName('sales_code')]
+        private ?string $salesCode= null,
+        #[SerializedName('additional_invoice_field')]
+        private mixed $additionalInvoiceField= null,
+        #[SerializedName('products_margin')]
+        private mixed $productsMargin= null,
+        #[SerializedName('payment_url')]
+        private ?string $paymentUrl= null,
+        #[SerializedName('view_url')]
+        private ?string $viewUrl= null,
+        #[SerializedName('buyer_mobile_phone')]
+        private mixed $buyerMobilePhone= null,
+        #[SerializedName('kind_text')]
+        private ?string $kindText= null,
+        #[SerializedName('invoice_for_receipt_id')]
+        private mixed $invoiceForReceiptId= null,
+        #[SerializedName('receipt_for_invoice_id')]
+        private mixed $receiptForInvoiceId= null,
+        #[SerializedName('recipient_company')]
+        private mixed $recipientCompany= null,
+        #[SerializedName('recipient_first_name')]
+        private mixed $recipientFirstName= null,
+        #[SerializedName('recipient_last_name')]
+        private mixed $recipientLastName= null,
+        #[SerializedName('recipient_tax_no')]
+        private mixed $recipientTaxNo= null,
+        #[SerializedName('recipient_street')]
+        private mixed $recipientStreet= null,
+        #[SerializedName('recipient_post_code')]
+        private mixed $recipientPostCode= null,
+        #[SerializedName('recipient_city')]
+        private mixed $recipientCity= null,
+        #[SerializedName('recipient_country')]
+        private mixed $recipientCountry= null,
+        #[SerializedName('recipient_email')]
+        private mixed $recipientEmail= null,
+        #[SerializedName('recipient_phone')]
+        private mixed $recipientPhone= null,
+        #[SerializedName('recipient_note')]
+        private mixed $recipientNote= null,
+        private ?bool $overdue= null,
+        #[SerializedName('get_tax_name')]
+        private ?string $getTaxName= null,
+        #[SerializedName('tax_visible')]
+        private ?bool $taxVisible= null,
+        #[SerializedName('tax_name_type')]
+        private ?string $taxNameType= null,
+        #[SerializedName('use_oss')]
+        private ?bool $useOss= null,
+        #[SerializedName('adjust_invoice_price')]
+        private ?string $adjustInvoicePrice= null,
+        #[SerializedName('check_fiscal_print')]
+        private ?bool $checkFiscalPrint= null,
+        #[SerializedName('fiscal_print_error')]
+        private ?bool $fiscalPrintError= null,
+        #[SerializedName('seller_bdo_no')]
+        private mixed $sellerBdoNo= null,
+        #[SerializedName('split_payment')]
+        private mixed $splitPayment= null,
+        #[SerializedName('gtu_codes')]
+        private ?array $gtuCodes= null,
+        #[SerializedName('procedure_designations')]
+        private ?array $procedureDesignations= null,
+        /**@var InvoicePosition[] */
+        private ?array $positions= null,
+        private ?array $issuers= null,
+        private ?array $recipients= null,
     ) {
     }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -298,7 +447,6 @@ class Invoice
         $zlInt = (int) $zl;
         $grInt = (int) substr($gr . '00', 0, 2); // "7" => "70", "07" => "07", "070" => "07"
 
-        // preserve sign
         $sign = $zlInt < 0 ? -1 : 1;
 
         return $zlInt * 100 + $sign * $grInt;
