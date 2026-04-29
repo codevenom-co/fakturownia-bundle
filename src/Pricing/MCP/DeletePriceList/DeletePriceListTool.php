@@ -31,7 +31,7 @@ final readonly class DeletePriceListTool
 
             $this->inputValidator->validate($input);
 
-            $this->pricingApiModule->deletePriceList($input->id);
+            $this->pricingApiModule->deletePriceList($input->getId());
 
             return $this->responder->success(['message' => sprintf('Price list with ID %d deleted successfully.', $id)]);
         });

@@ -41,7 +41,7 @@ final readonly class AddPriceListTool
 
             $this->inputValidator->validate($input);
 
-            $priceListModel = $this->priceListPayloadMapper->toModel($input->priceList);
+            $priceListModel = $this->priceListPayloadMapper->toModel($input->getPriceList());
             $createdPriceList = $this->pricingApiModule->create($priceListModel);
 
             return $this->responder->success($this->priceListPayloadMapper->toPayload($createdPriceList));

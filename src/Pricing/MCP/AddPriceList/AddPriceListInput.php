@@ -6,15 +6,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class AddPriceListInput
 {
-    #[Assert\NotBlank]
-    /** @var array<string, mixed> */
-    public array $priceList;
-
     /**
      * @param array<string, mixed> $priceList
      */
-    public function __construct(array $priceList = [])
+    public function __construct(
+        #[Assert\NotBlank]
+        /** @var array<string, mixed> */
+        private array $priceList = [],
+    ) {
+    }
+
+    public function getPriceList(): array
     {
-        $this->priceList = $priceList;
+        return $this->priceList;
     }
 }
