@@ -13,7 +13,7 @@ final class McpResponder
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @return array<string, mixed>
      */
     public function success(mixed $payload): array
     {

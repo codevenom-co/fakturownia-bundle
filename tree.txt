@@ -1,0 +1,72 @@
+./src/
+├── Client
+│   ├── AbstractFakturowniaClient.php
+│   ├── FakturowniaClientInterface.php
+│   └── InvoiceClient.php
+├── CodevenomFakturowniaBundle.php
+├── DependencyInjection
+│   ├── CodevenomFakturowniaExtension.php
+│   └── Configuration.php
+├── Exception
+│   ├── FakturowniaClientException.php
+│   ├── FakturowniaException.php
+│   ├── InvoiceCreationFailedException.php
+│   ├── InvoiceNotFoundException.php
+│   └── UnableToRetrieveInvoicesForProvidedPeriodException.php
+├── Facade
+│   ├── FakturowniaFacadeInterface.php
+│   └── FakturowniaFacade.php
+├── Invoice
+│   ├── Enum
+│   │   ├── InvoiceKind.php
+│   │   └── InvoicePeriod.php
+│   ├── InvoiceManagerInterface.php
+│   ├── InvoiceManager.php
+│   ├── Mapper
+│   │   ├── CreateInvoicePayloadMapper.php
+│   │   └── InvoicePayloadMapper.php
+│   ├── MCP
+│   │   └── FindInvoiceByNumber
+│   │       ├── FindInvoiceByNumberInput.php
+│   │       └── FindInvoiceByNumberTool.php
+│   ├── Model
+│   │   ├── CalculatingStrategy.php
+│   │   ├── CreateInvoice.php
+│   │   ├── Invoice.php
+│   │   ├── InvoicePosition.php
+│   │   └── InvoiceResponse.php
+│   └── Service
+│       └── InvoiceService.php
+├── Report
+│   ├── Factory
+│   ├── FakturowniaReportManagerInterface.php
+│   ├── FakturowniaReportManager.php
+│   └── Model
+├── Resources
+│   └── config
+│       ├── packages
+│       │   ├── codevenom_fakturownia.yaml
+│       │   └── framework.yaml
+│       ├── routes
+│       │   └── mcp.yaml
+│       └── services.yaml
+└── Shared
+    ├── Mapper
+    │   ├── AbstractPayloadMapper.php
+    │   └── PayloadMapperInterface.php
+    └── MCP
+        ├── Exception
+        │   ├── InvalidArgumentsException.php
+        │   ├── McpToolException.php
+        │   └── NotFoundException.php
+        ├── McpToolExecutor.php
+        ├── Response
+        │   └── McpResponder.php
+        ├── Serializer
+        │   └── JsonAPIDeserializerManager.php
+        ├── Tool
+        │   └── MCPToolInterface.php
+        └── Validation
+            └── McpInputValidator.php
+
+27 directories, 43 files

@@ -227,6 +227,7 @@ class Invoice
         private mixed $issuer= null,
         #[SerializedName('use_issuer')]
         private ?bool $useIssuer= null,
+        #[SerializedName('cancelled')]
         private ?bool $cancelled= null,
         #[SerializedName('recipient_id')]
         private mixed $recipientId= null,
@@ -297,6 +298,7 @@ class Invoice
         private mixed $recipientPhone= null,
         #[SerializedName('recipient_note')]
         private mixed $recipientNote= null,
+        #[SerializedName('overdue')]
         private ?bool $overdue= null,
         #[SerializedName('get_tax_name')]
         private ?string $getTaxName= null,
@@ -322,7 +324,9 @@ class Invoice
         private ?array $procedureDesignations= null,
         /**@var InvoicePosition[] */
         private ?array $positions= null,
+        #[SerializedName('issuers')]
         private ?array $issuers= null,
+        #[SerializedName('recipients')]
         private ?array $recipients= null,
     ) {
     }

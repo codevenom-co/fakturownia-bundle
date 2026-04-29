@@ -21,6 +21,10 @@ services:
       - '../../Shared/Mapper/'
       - '../../Invoice/MCP/*/*Input.php'
       - '../../Report/MCP/*/*Input.php'
+      - '../../Customer/Model/'
+      - '../../Customer/Enum/'
+      - '../../Customer/MCP/'
+      - '../../Customer/MCP/*/*Input.php'
 
 
   Codevenom\FakturowniaBundle\Invoice\MCP\:
@@ -31,6 +35,18 @@ services:
 
   Codevenom\FakturowniaBundle\Report\MCP\:
     resource: '../../Report/MCP/*/*Tool.php'
+    autowire: true
+    autoconfigure: true
+    tags: ['mcp.tool']
+
+  Codevenom\FakturowniaBundle\Customer\MCP\:
+    resource: '../../Customer/MCP/*/*Tool.php'
+    autowire: true
+    autoconfigure: true
+    tags: ['mcp.tool']
+
+  Codevenom\FakturowniaBundle\Pricing\MCP\:
+    resource: '../../Pricing/MCP/*/*Tool.php'
     autowire: true
     autoconfigure: true
     tags: ['mcp.tool']
@@ -56,11 +72,45 @@ services:
       $sellerTaxId: '%codevenom_fakturownia.seller_tax_id%'
       $timeout: '%codevenom_fakturownia.timeout%'
 
-  Codevenom\FakturowniaBundle\Client\FakturowniaClientInterface:
+  Codevenom\FakturowniaBundle\Client\FakturowniaInvoiceClientInterface:
     alias: Codevenom\FakturowniaBundle\Client\InvoiceClient
+
+  Codevenom\FakturowniaBundle\Client\FakturowniaCustomerClientInterface:
+    alias: Codevenom\FakturowniaBundle\Client\CustomerClient
+
+
 
   Codevenom\FakturowniaBundle\Report\FakturowniaReportManagerInterface:
     alias: Codevenom\FakturowniaBundle\Report\FakturowniaReportManager
 
   Codevenom\FakturowniaBundle\Invoice\InvoiceApiModuleInterface:
     alias: Codevenom\FakturowniaBundle\Invoice\InvoiceApiModule
+
+  # Customer Context
+  Codevenom\FakturowniaBundle\Client\CustomerClient:
+    arguments:
+      $baseUrl: '%codevenom_fakturownia.base_url%'
+      $apiToken: '%codevenom_fakturownia.api_token%'
+      $timeout: '%codevenom_fakturownia.timeout%'
+
+  Codevenom\FakturowniaBundle\Customer\CustomerManagerInterface:
+    alias: Codevenom\FakturowniaBundle\Customer\CustomerManager
+
+  Codevenom\FakturowniaBundle\Customer\CustomerApiModuleInterface:
+    alias: Codevenom\FakturowniaBundle\Customer\CustomerApiModule
+
+  # Pricing Context
+  Codevenom\FakturowniaBundle\Client\PricingClient:
+    arguments:
+      $baseUrl: '%codevenom_fakturownia.base_url%'
+      $apiToken: '%codevenom_fakturownia.api_token%'
+      $timeout: '%codevenom_fakturownia.timeout%'
+
+  Codevenom\FakturowniaBundle\Client\FakturowniaPricingClientInterface:
+    alias: Codevenom\FakturowniaBundle\Client\PricingClient
+
+  Codevenom\FakturowniaBundle\Pricing\PricingManagerInterface:
+    alias: Codevenom\FakturowniaBundle\Pricing\PricingManager
+
+  Codevenom\FakturowniaBundle\Pricing\PricingApiModuleInterface:
+    alias: Codevenom\FakturowniaBundle\Pricing\PricingApiModule

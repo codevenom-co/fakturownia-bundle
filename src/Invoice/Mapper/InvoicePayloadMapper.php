@@ -21,8 +21,8 @@ class InvoicePayloadMapper extends AbstractPayloadMapper implements PayloadMappe
     }
 
 
-    public function toModel(array $data): object
+    public function toModel(array $data, ?object $objectToPopulate = null): object
     {
-        return parent::convertToModel($data, Invoice::class);
+        return parent::convertToModel($data, Invoice::class, $objectToPopulate);
     }
 }

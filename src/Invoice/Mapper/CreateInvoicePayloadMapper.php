@@ -22,8 +22,8 @@ class CreateInvoicePayloadMapper extends AbstractPayloadMapper implements Payloa
         ];
     }
 
-    public function toModel(array $data): object
+    public function toModel(array $data, ?object $objectToPopulate = null): object
     {
-        return parent::convertToModel($data, CreateInvoice::class);
+        return parent::convertToModel($data, CreateInvoice::class, $objectToPopulate);
     }
 }

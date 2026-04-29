@@ -2,7 +2,7 @@
 
 namespace Codevenom\FakturowniaBundle\Invoice\Service;
 
-use Codevenom\FakturowniaBundle\Client\FakturowniaClientInterface;
+use Codevenom\FakturowniaBundle\Client\FakturowniaInvoiceClientInterface;
 use Codevenom\FakturowniaBundle\Invoice\Enum\InvoicePeriod;
 use Codevenom\FakturowniaBundle\Invoice\Model\CreateInvoice;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
@@ -11,7 +11,7 @@ use Codevenom\FakturowniaBundle\Report\Dto\ReportsFilter;
 readonly final class InvoiceService
 {
     public function __construct(
-        private readonly FakturowniaClientInterface $client
+        private readonly FakturowniaInvoiceClientInterface $client
     )
     {
     }

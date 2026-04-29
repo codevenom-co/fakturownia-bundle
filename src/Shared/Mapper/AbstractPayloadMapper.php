@@ -20,7 +20,9 @@ abstract class AbstractPayloadMapper
      */
     protected function convertToPayload(object $model): array
     {
-        return $this->serializer->normalize($model, 'json', [
+        /** @var \Symfony\Component\Serializer\Normalizer\NormalizerInterface $serializer */
+        $serializer = $this->serializer;
+        return $serializer->normalize($model, 'json', [
             AbstractObjectNormalizer::SKIP_NULL_VALUES => true
         ]);
     }
@@ -28,9 +30,14 @@ abstract class AbstractPayloadMapper
     /**
      * @throws ExceptionInterface
      */
-    protected function convertToModel(array $data, ?string $class = null): object
+    protected function convertToModel(array $data, ?string $class = null, ?object $objectToPopulate = null): object
     {
         $json = json_encode($data);
-        return $this->serializer->deserialize($json, $class, 'json');
+        $context = [];
+        if ($objectToPopulate) {
+            $context[AbstractObjectNormalizer::OBJECT_TO_POPULATE] = $objectToPopulate;
+        }
+
+        return $this->serializer->deserialize($json, $class, 'json', $context);
     }
 }

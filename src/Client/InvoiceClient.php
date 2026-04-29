@@ -2,6 +2,7 @@
 
 namespace Codevenom\FakturowniaBundle\Client;
 
+use Codevenom\FakturowniaBundle\Exception\FakturowniaClientException;
 use Codevenom\FakturowniaBundle\Exception\FakturowniaException;
 use Codevenom\FakturowniaBundle\Exception\InvoiceCreationFailedException;
 use Codevenom\FakturowniaBundle\Exception\InvoiceNotFoundException;
@@ -13,14 +14,13 @@ use Codevenom\FakturowniaBundle\Invoice\Model\CreateInvoice;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class InvoiceClient extends AbstractFakturowniaClient implements FakturowniaClientInterface
+class InvoiceClient extends AbstractFakturowniaClient implements FakturowniaInvoiceClientInterface
 {
 
     public function __construct(

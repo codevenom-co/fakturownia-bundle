@@ -14,8 +14,9 @@ interface PayloadMapperInterface
     /**
      * @template T of object
      * @param array $data
-     * @return object
+     * @param T|null $objectToPopulate
+     * @return T
      * @throws ExceptionInterface
      */
-    public function toModel(array $data): object;
+    public function toModel(array $data, ?object $objectToPopulate = null): object;
 }

@@ -6,7 +6,7 @@ use Codevenom\FakturowniaBundle\Invoice\Enum\InvoicePeriod;
 use Codevenom\FakturowniaBundle\Invoice\Model\CreateInvoice;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
 
-interface FakturowniaClientInterface
+interface FakturowniaInvoiceClientInterface
 {
     /**
      * @param CreateInvoice $request
