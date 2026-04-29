@@ -6,6 +6,7 @@ use Codevenom\FakturowniaBundle\Client\FakturowniaClientInterface;
 use Codevenom\FakturowniaBundle\Invoice\Enum\InvoicePeriod;
 use Codevenom\FakturowniaBundle\Invoice\Model\CreateInvoice;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
+use Codevenom\FakturowniaBundle\Report\Dto\ReportsFilter;
 
 readonly final class InvoiceService
 {
@@ -49,5 +50,39 @@ readonly final class InvoiceService
     public function findByNumber(string $number, bool $income = true): ?Invoice
     {
         return $this->client->findByNumber($number, $income);
+    }
+
+    public function listInvoices(ReportsFilter $filters): iterable
+    {
+        $page = 1;
+        $perPage = 100;
+        $maxPages = 100;
+
+        $queryParams = array_merge($filters->toArray(), [
+            'per_page' => $perPage,
+        ]);
+
+        if (isset($queryParams['date_from']) || isset($queryParams['date_to'])) {
+            $queryParams['period'] = 'more';
+        }
+
+        while ($page <= $maxPages) {
+            $queryParams['page'] = $page;
+            $invoices = $this->client->listInvoices($queryParams);
+
+            if (empty($invoices)) {
+                break;
+            }
+
+            foreach ($invoices as $invoice) {
+                yield $invoice;
+            }
+
+            if (count($invoices) < $perPage) {
+                break;
+            }
+
+            $page++;
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace Codevenom\FakturowniaBundle\Invoice\MCP\FindInvoiceByNumber;
 
 use Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface;
+use Codevenom\FakturowniaBundle\Invoice\Mapper\InvoicePayloadMapper;
 use Codevenom\FakturowniaBundle\Shared\MCP\Exception\NotFoundException;
 use Codevenom\FakturowniaBundle\Shared\MCP\McpToolExecutor;
 use Codevenom\FakturowniaBundle\Shared\MCP\Response\McpResponder;
@@ -19,6 +20,7 @@ final class FindInvoiceByNumberTool
 {
     public function __construct(
         private readonly InvoiceManagerInterface $invoiceManager,
+        private readonly InvoicePayloadMapper    $invoicePayloadMapper,
         private readonly McpResponder            $responder,
         private readonly McpToolExecutor         $executor,
         private readonly McpInputValidator       $inputValidator,
@@ -45,7 +47,7 @@ final class FindInvoiceByNumberTool
                 throw new NotFoundException(sprintf('Invoice "%s" not found.', $input->getNumber()));
             }
 
-            return $this->responder->success($invoice);
+            return $this->responder->success($this->invoicePayloadMapper->toPayload($invoice));
         });
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Codevenom\FakturowniaBundle\Invoice\Model;
 
+use Codevenom\FakturowniaBundle\Invoice\Enum\InvoiceStatus;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
 ;
@@ -470,6 +471,12 @@ class Invoice
     public function setStatus(?string $status): void
     {
         $this->status = $status;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->status === InvoiceStatus::PAID->value &&
+            $this->getPaid() === $this->getPriceGross();
     }
 
     public function getDescription(): mixed

@@ -145,6 +145,20 @@ class InvoiceClient extends AbstractFakturowniaClient implements FakturowniaClie
     }
 
 
+    public function listInvoices(array $query): array
+    {
+        $response = $this->get('/invoices.json', query: $query);
+
+        if ($response->getStatusCode() !== Response::HTTP_OK) {
+            throw new FakturowniaClientException(sprintf(
+                'Failed to list invoices: %s',
+                $response->getContent(false)
+            ));
+        }
+
+        return array_map(fn(array $invoiceData): Invoice => $this->invoicePayloadMapper->toModel($invoiceData), $response->toArray());
+    }
+
     /**
      * @param string $id
      * @return string

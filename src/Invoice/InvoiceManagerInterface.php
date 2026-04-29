@@ -4,6 +4,7 @@ namespace Codevenom\FakturowniaBundle\Invoice;
 
 use Codevenom\FakturowniaBundle\Invoice\Model\CreateInvoice;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
+use Codevenom\FakturowniaBundle\Report\Dto\ReportsFilter;
 
 interface InvoiceManagerInterface
 {
@@ -26,4 +27,9 @@ interface InvoiceManagerInterface
      * @return Invoice|null
      */
     public function findByNumber(string $number, bool $income = true): ?Invoice;
+
+    /**
+     * @return iterable<Invoice>
+     */
+    public function listInvoices(ReportsFilter $filters): iterable;
 }

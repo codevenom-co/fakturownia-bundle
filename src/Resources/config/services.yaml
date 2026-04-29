@@ -15,10 +15,12 @@ services:
       - '../../Invoice/MCP/'
       - '../../Report/Model/'
       - '../../Report/Factory/'
+      - '../../Report/MCP/'
       - '../../Exception/'
       - '../../Shared/MCP/Exception/'
       - '../../Shared/Mapper/'
       - '../../Invoice/MCP/*/*Input.php'
+      - '../../Report/MCP/*/*Input.php'
 
 
   Codevenom\FakturowniaBundle\Invoice\MCP\:
@@ -26,6 +28,23 @@ services:
     autowire: true
     autoconfigure: true
     tags: ['mcp.tool']
+
+  Codevenom\FakturowniaBundle\Report\MCP\:
+    resource: '../../Report/MCP/*/*Tool.php'
+    autowire: true
+    autoconfigure: true
+    tags: ['mcp.tool']
+
+  Codevenom\FakturowniaBundle\Report\Strategy\:
+    resource: '../../Report/Strategy/*'
+    tags: ['fakturownia.report_definition']
+
+  Codevenom\FakturowniaBundle\Report\Service\:
+    resource: '../../Report/Service/*'
+
+  Codevenom\FakturowniaBundle\Report\FakturowniaReportManager:
+    arguments:
+      $reportDefinitions: !tagged_iterator fakturownia.report_definition
 
 
   # Concrete client with params
@@ -40,5 +59,8 @@ services:
   Codevenom\FakturowniaBundle\Client\FakturowniaClientInterface:
     alias: Codevenom\FakturowniaBundle\Client\InvoiceClient
 
-  Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface:
-    alias: Codevenom\FakturowniaBundle\Invoice\InvoiceManager
+  Codevenom\FakturowniaBundle\Report\FakturowniaReportManagerInterface:
+    alias: Codevenom\FakturowniaBundle\Report\FakturowniaReportManager
+
+  Codevenom\FakturowniaBundle\Invoice\InvoiceApiModuleInterface:
+    alias: Codevenom\FakturowniaBundle\Invoice\InvoiceApiModule

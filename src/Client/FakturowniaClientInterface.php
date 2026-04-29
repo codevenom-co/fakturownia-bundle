@@ -38,6 +38,12 @@ interface FakturowniaClientInterface
     public function findByPeriod(InvoicePeriod $period, int $page, int $perPage, bool $income = true): array;
 
     /**
+     * @param array<string, mixed> $query
+     * @return array<int, Invoice>
+     */
+    public function listInvoices(array $query): array;
+
+    /**
      * @param string $id
      * @return string
      */
