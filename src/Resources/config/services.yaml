@@ -12,9 +12,11 @@ services:
       - '../../Invoice/Model/'
       - '../../Invoice/Enum/'
       - '../../Invoice/Factory/'
+      - '../../Invoice/MCP/'
       - '../../Report/Model/'
       - '../../Report/Factory/'
       - '../../Exception/'
+      - '../../Shared/MCP/Exception/'
       - '../../Shared/Mapper/'
       - '../../Invoice/MCP/*/*Input.php'
 

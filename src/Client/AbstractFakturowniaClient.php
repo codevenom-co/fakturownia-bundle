@@ -38,7 +38,8 @@ abstract class AbstractFakturowniaClient
      */
     protected function get(string $endpoint, array $query = [], array $options = []): ResponseInterface
     {
-        $options['query'] = array_merge($options['query'] ?? [], $query);
+
+        $options['query'] = array_merge($options['query'] ?? [], $query, ['api_token' => $this->apiToken]);
 
         return $this->sendRequest('GET', $endpoint, $options);
     }

@@ -3,59 +3,49 @@
 namespace Codevenom\FakturowniaBundle\Invoice\MCP\FindInvoiceByNumber;
 
 use Codevenom\FakturowniaBundle\Invoice\InvoiceManagerInterface;
+use Codevenom\FakturowniaBundle\Shared\MCP\Exception\NotFoundException;
+use Codevenom\FakturowniaBundle\Shared\MCP\McpToolExecutor;
+use Codevenom\FakturowniaBundle\Shared\MCP\Response\McpResponder;
+use Codevenom\FakturowniaBundle\Shared\MCP\Validation\McpInputValidator;
 use Mcp\Capability\Attribute\McpTool;
-use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[McpTool(
     name: 'codevenom.fakturownia.invoice.find_by_number',
     description: 'Finds an invoice by its number and returns key details (including due date/payment_to).'
 )]
-#[AsTaggedItem('mcp.tool')]
+#[AutoconfigureTag('mcp.tool')]
 final class FindInvoiceByNumberTool
 {
     public function __construct(
         private readonly InvoiceManagerInterface $invoiceManager,
-    ) {}
+        private readonly McpResponder            $responder,
+        private readonly McpToolExecutor         $executor,
+        private readonly McpInputValidator       $inputValidator,
+    )
+    {
+    }
 
     /**
-     * The MCP bundle uses the invokable pattern for tools.
-     *
      * @return array<string, mixed>
      */
-    public function __invoke(FindInvoiceByNumberInput $input): array
+    public function __invoke(string $number, bool $income = true): array
     {
-        $number = trim($input->getNumber());
-        if ($number === '') {
-            return [
-                'ok' => false,
-                'error' => [
-                    'code' => 'invalid_arguments',
-                    'message' => 'Invoice number must not be empty.',
-                ],
-            ];
-        }
+        return $this->executor->execute(function () use ($number, $income): array {
+            $input = new FindInvoiceByNumberInput($number, $income);
 
-        $invoice = $this->invoiceManager->findByNumber($number, $input->isIncome());
+            $this->inputValidator->validate($input);
 
-        if (null === $invoice) {
-            return [
-                'ok' => false,
-                'error' => [
-                    'code' => 'not_found',
-                    'message' => sprintf('Invoice "%s" not found.', $number),
-                ],
-            ];
-        }
+            $invoice = $this->invoiceManager->findByNumber(
+                $input->getNumber(),
+                $input->isIncome(),
+            );
 
-        return [
-            'ok' => true,
-            'invoice' => [
-                'id' => $invoice->getId(),
-                'number' => $invoice->getNumber(),
-                'payment_to' => $invoice->getPaymentTo(),
-                'issue_date' => $invoice->getIssueDate(),
-                'buyer_name' => $invoice->getBuyerName(),
-            ],
-        ];
+            if (null === $invoice) {
+                throw new NotFoundException(sprintf('Invoice "%s" not found.', $input->getNumber()));
+            }
+
+            return $this->responder->success($invoice);
+        });
     }
 }
