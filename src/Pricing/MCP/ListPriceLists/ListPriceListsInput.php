@@ -4,6 +4,15 @@ namespace Codevenom\FakturowniaBundle\Pricing\MCP\ListPriceLists;
 
 class ListPriceListsInput
 {
-    /** @var array<string, mixed>|null */
-    public readonly ?array $query = null;
+    public function __construct(
+        /** @var array<string, mixed>|null */
+        private readonly ?array $query = []
+    )
+    {
+    }
+
+    public function getQuery(): ?array
+    {
+        return $this->query;
+    }
 }

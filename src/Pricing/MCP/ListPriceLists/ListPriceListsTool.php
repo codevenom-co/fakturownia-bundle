@@ -34,12 +34,10 @@ final class ListPriceListsTool
     public function __invoke(array $query = []): array
     {
         return $this->executor->execute(function () use ($query): array {
-            $input = new ListPriceListsInput();
-            $input->query = $query;
-
+            $input = new ListPriceListsInput($query);
             $this->inputValidator->validate($input);
 
-            $priceLists = $this->pricingApiModule->listPriceLists($input->query ?? []);
+            $priceLists = $this->pricingApiModule->listPriceLists($input->getQuery() ?? []);
             $payload = [];
 
             foreach ($priceLists as $priceList) {
