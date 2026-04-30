@@ -40,20 +40,5 @@ final class CodevenomFakturowniaExtension extends Extension
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yaml');
-
-        if (!class_exists('Symfony\AI\McpBundle\McpBundle')) {
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Invoice\MCP\AddInvoice\AddInvoiceTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Invoice\MCP\FindInvoiceByNumber\FindInvoiceByNumberTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Customer\MCP\AddCustomer\AddCustomerTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Customer\MCP\DeleteCustomer\DeleteCustomerTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Customer\MCP\FindCustomerById\FindCustomerByIdTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Customer\MCP\ListCustomers\ListCustomersTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Customer\MCP\UpdateCustomer\UpdateCustomerTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Pricing\MCP\AddPriceList\AddPriceListTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Pricing\MCP\DeletePriceList\DeletePriceListTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Pricing\MCP\ListPriceLists\ListPriceListsTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Pricing\MCP\UpdatePriceList\UpdatePriceListTool');
-            $container->removeDefinition('Codevenom\FakturowniaBundle\Report\MCP\GetReport\GetReportTool');
-        }
     }
 }
