@@ -11,6 +11,7 @@ services:
       - '../../CodevenomFakturowniaBundle.php'
       - '../../Invoice/Model/'
       - '../../Invoice/Enum/'
+      - '../../Invoice/Dto/'
       - '../../Invoice/Factory/'
       - '../../Invoice/MCP/'
       - '../../Report/Model/'

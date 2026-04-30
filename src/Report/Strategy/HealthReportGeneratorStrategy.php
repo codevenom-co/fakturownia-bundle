@@ -2,7 +2,7 @@
 
 namespace Codevenom\FakturowniaBundle\Report\Strategy;
 
-use Codevenom\FakturowniaBundle\Report\Dto\ReportsFilter;
+use Codevenom\FakturowniaBundle\Invoice\Dto\InvoiceFilter;
 use Codevenom\FakturowniaBundle\Report\Model\ReportInput;
 use Codevenom\FakturowniaBundle\Report\Model\ReportOutput;
 use Codevenom\FakturowniaBundle\Report\Service\ReportInvoicesService;
@@ -27,7 +27,7 @@ final readonly class HealthReportGeneratorStrategy implements ReportGenerationSt
 
     public function generate(ReportInput $input): ReportOutput
     {
-        $filters = new ReportsFilter(
+        $filters = new InvoiceFilter(
             dateFrom: $input->dateFrom,
             dateTo: $input->dateTo,
             searchDateType: $input->basis,

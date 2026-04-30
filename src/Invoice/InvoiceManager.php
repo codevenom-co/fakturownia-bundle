@@ -6,7 +6,7 @@ use Codevenom\FakturowniaBundle\Invoice\Enum\InvoicePeriod;
 use Codevenom\FakturowniaBundle\Invoice\Model\CreateInvoice;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
 use Codevenom\FakturowniaBundle\Invoice\Service\InvoiceService;
-use Codevenom\FakturowniaBundle\Report\Dto\ReportsFilter;
+use Codevenom\FakturowniaBundle\Invoice\Dto\InvoiceFilter;
 
 readonly class InvoiceManager implements InvoiceManagerInterface
 {
@@ -52,7 +52,7 @@ readonly class InvoiceManager implements InvoiceManagerInterface
         return $this->invoiceService->findByNumber($number, $income);
     }
 
-    public function listInvoices(ReportsFilter $filters): iterable
+    public function listInvoices(InvoiceFilter $filters): iterable
     {
         return $this->invoiceService->listInvoices($filters);
     }

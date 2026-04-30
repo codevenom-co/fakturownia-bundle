@@ -1,8 +1,8 @@
 <?php
 
-namespace Codevenom\FakturowniaBundle\Report\Dto;
+namespace Codevenom\FakturowniaBundle\Invoice\Dto;
 
-final readonly class ReportsFilter
+final readonly class InvoiceFilter
 {
     public function __construct(
         public ?string $dateFrom = null,
@@ -12,6 +12,12 @@ final readonly class ReportsFilter
         public ?string $income = null,
         public ?int $clientId = null,
         public ?string $kind = null,
+        /** @var string[]|null */
+        public ?array $kinds = null,
+        /** @var int[]|null */
+        public ?array $invoiceIds = null,
+        public ?string $number = null,
+        public ?string $order = null,
     ) {
     }
 
@@ -24,6 +30,10 @@ final readonly class ReportsFilter
      *     income?: string,
      *     client_id?: int,
      *     kind?: string,
+     *     kinds?: string[],
+     *     invoice_ids?: int[],
+     *     number?: string,
+     *     order?: string,
      * }
      */
     public function toArray(): array
@@ -49,6 +59,18 @@ final readonly class ReportsFilter
         }
         if ($this->kind !== null) {
             $data['kind'] = $this->kind;
+        }
+        if ($this->kinds !== null) {
+            $data['kinds'] = $this->kinds;
+        }
+        if ($this->invoiceIds !== null) {
+            $data['invoice_ids'] = $this->invoiceIds;
+        }
+        if ($this->number !== null) {
+            $data['number'] = $this->number;
+        }
+        if ($this->order !== null) {
+            $data['order'] = $this->order;
         }
 
         return $data;

@@ -3,7 +3,7 @@
 namespace Codevenom\FakturowniaBundle\Invoice;
 
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
-use Codevenom\FakturowniaBundle\Report\Dto\ReportsFilter;
+use Codevenom\FakturowniaBundle\Invoice\Dto\InvoiceFilter;
 
 final readonly class InvoiceApiModule implements InvoiceApiModuleInterface
 {
@@ -12,7 +12,7 @@ final readonly class InvoiceApiModule implements InvoiceApiModuleInterface
     ) {
     }
 
-    public function listInvoices(ReportsFilter $filters): iterable
+    public function listInvoices(InvoiceFilter $filters): iterable
     {
         return $this->invoiceManager->listInvoices($filters);
     }

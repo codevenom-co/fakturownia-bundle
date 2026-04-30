@@ -4,7 +4,7 @@ namespace Codevenom\FakturowniaBundle\Report\Service;
 
 use Codevenom\FakturowniaBundle\Invoice\InvoiceApiModuleInterface;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
-use Codevenom\FakturowniaBundle\Report\Dto\ReportsFilter;
+use Codevenom\FakturowniaBundle\Invoice\Dto\InvoiceFilter;
 
 final readonly class ReportInvoicesService
 {
@@ -16,7 +16,7 @@ final readonly class ReportInvoicesService
     /**
      * @return iterable<Invoice>
      */
-    public function listInvoices(ReportsFilter $filters): iterable
+    public function listInvoices(InvoiceFilter $filters): iterable
     {
         return $this->invoiceApi->listInvoices($filters);
     }
