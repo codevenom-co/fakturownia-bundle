@@ -34,14 +34,20 @@ Symfony bundle for the Fakturownia API with built-in MCP tools.
 
 ## Requirements
 
-- PHP 8.2+
-- Symfony 6.4+ or 7.x
-- `symfony/mcp-bundle` (`stdio` and/or HTTP transport)
+- PHP 8.1+
+- Symfony 6.4+, 7.x or 8.x
+- `symfony/mcp-bundle` (optional, for MCP tools support)
 
 ## Installation
 
 ```bash
-composer require codevenom/fakturownia-bundle symfony/mcp-bundle
+composer require codevenom/fakturownia-bundle
+```
+
+If you want to use MCP tools (requires Symfony 7.3+):
+
+```bash
+composer require symfony/mcp-bundle
 ```
 
 ## Symfony Configuration
@@ -153,7 +159,7 @@ To verify that the bundle and its recipes work correctly across different PHP an
 ./scripts/verify-recipes.sh 8.4 8
 ```
 
-Note: Currently, Symfony 6 scenarios are expected to fail during dependency resolution because `symfony/mcp-bundle` requires Symfony ^7.3.
+Note: All verification scenarios should now pass. Symfony 6 scenarios do not include `symfony/mcp-bundle` as it is not compatible with Symfony 6.
 
 Or via Task:
 
