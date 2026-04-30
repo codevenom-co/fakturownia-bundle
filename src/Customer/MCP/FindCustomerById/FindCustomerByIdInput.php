@@ -4,7 +4,7 @@ namespace Codevenom\FakturowniaBundle\Customer\MCP\FindCustomerById;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class FindCustomerByIdInput
+final class FindCustomerByIdInput
 {
     public function __construct(
         #[Assert\NotBlank(message: 'Customer ID must not be empty.')]

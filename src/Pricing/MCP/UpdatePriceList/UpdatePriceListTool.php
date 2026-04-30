@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     description: 'Updates an existing price list in Fakturownia.'
 )]
 #[AutoconfigureTag('mcp.tool')]
-final readonly class UpdatePriceListTool
+final class UpdatePriceListTool
 {
     public function __construct(
         private PricingApiModuleInterface $pricingApiModule,

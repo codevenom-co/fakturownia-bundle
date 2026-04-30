@@ -7,9 +7,9 @@ namespace Codevenom\FakturowniaBundle\Invoice\Model;
 class InvoiceResponse
 {
     private function __construct(
-        public int $id,
-        public string $number,
-        public string $url,
+        public readonly int $id,
+        public readonly string $number,
+        public readonly string $url,
     ) {
     }
 
@@ -43,7 +43,7 @@ class InvoiceResponse
         $this->url = $url;
     }
 
-    public static function fromArray(array $data): self
+    public readonly static function fromArray(array $data): self
     {
         return new self(
             id: $data['id'],

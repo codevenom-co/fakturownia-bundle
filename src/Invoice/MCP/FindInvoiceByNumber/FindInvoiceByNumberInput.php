@@ -4,7 +4,7 @@ namespace Codevenom\FakturowniaBundle\Invoice\MCP\FindInvoiceByNumber;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class FindInvoiceByNumberInput
+final class FindInvoiceByNumberInput
 {
     public function __construct(
         #[Assert\NotBlank(message: 'Invoice number must not be empty.')]

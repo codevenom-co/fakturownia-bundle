@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     description: 'Generates a decision-ready report from Fakturownia data. Available reports: health, ar_aging, dso_trend, cash_forecast, etc.'
 )]
 #[AutoconfigureTag('mcp.tool')]
-final readonly class GetReportTool
+final class GetReportTool
 {
     public function __construct(
         private FakturowniaReportManagerInterface $reportManager,

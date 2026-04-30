@@ -7,7 +7,7 @@ use Codevenom\FakturowniaBundle\Report\Model\ReportInput;
 use Codevenom\FakturowniaBundle\Report\Model\ReportOutput;
 use Codevenom\FakturowniaBundle\Report\Service\ReportInvoicesService;
 
-final readonly class CashForecastReportGeneratorStrategy implements ReportGenerationStrategyInterface
+final class CashForecastReportGeneratorStrategy implements ReportGenerationStrategyInterface
 {
     public function __construct(
         private ReportInvoicesService $reportInvoicesService

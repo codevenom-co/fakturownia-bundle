@@ -4,7 +4,7 @@ namespace Codevenom\FakturowniaBundle\Pricing\MCP\DeletePriceList;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class DeletePriceListInput
+final class DeletePriceListInput
 {
 
     public function __construct(

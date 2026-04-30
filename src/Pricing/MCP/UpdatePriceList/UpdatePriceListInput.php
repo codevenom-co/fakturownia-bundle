@@ -7,11 +7,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UpdatePriceListInput
 {
     #[Assert\NotBlank]
-    public int $id;
+    public readonly int $id;
 
     #[Assert\NotBlank]
     /** @var array<string, mixed> */
-    public array $priceList;
+    public readonly array $priceList;
 
     /**
      * @param array<string, mixed> $priceList
