@@ -38,3 +38,11 @@ tasks:
     desc: Run static analysis
     cmds:
       - "{{.PHP_CONT}} vendor/bin/phpstan analyse src"
+
+  verify-recipes:
+    desc: Run all recipe verification scenarios
+    cmds:
+      - ./scripts/verify-recipes.sh 8.1 6
+      - ./scripts/verify-recipes.sh 8.4 6
+      - ./scripts/verify-recipes.sh 8.4 7
+      - ./scripts/verify-recipes.sh 8.4 8

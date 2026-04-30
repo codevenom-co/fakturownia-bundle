@@ -139,4 +139,26 @@ If you have Docker and [Task](https://taskfile.dev/) installed, you can easily r
 task install
 task test
 task cs-fix
+task verify-recipes
 ```
+
+## Recipe Verification
+
+To verify that the bundle and its recipes work correctly across different PHP and Symfony versions (similar to the QA pipelines in `symfony/recipes-contrib`), you can use the provided verification script:
+
+```bash
+./scripts/verify-recipes.sh 8.1 6
+./scripts/verify-recipes.sh 8.4 6
+./scripts/verify-recipes.sh 8.4 7
+./scripts/verify-recipes.sh 8.4 8
+```
+
+Note: Currently, Symfony 6 scenarios are expected to fail during dependency resolution because `symfony/mcp-bundle` requires Symfony ^7.3.
+
+Or via Task:
+
+```bash
+task verify-recipes
+```
+
+This requires Docker to be installed on your machine.
