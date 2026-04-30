@@ -14,4 +14,3 @@ mcp:
     scan_dirs:
       - '%kernel.project_dir%/src'
       - '%kernel.project_dir%/vendor/codevenom/fakturownia-bundle'
-
