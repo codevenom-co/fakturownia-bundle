@@ -7,8 +7,9 @@
   },
   "env": {
     "FAKTUROWNIA_BASE_URL": "https://app.fakturownia.pl",
-    "FAKTUROWNIA_API_TOKEN": "change_me",
+    "FAKTUROWNIA_API_TOKEN": "",
     "FAKTUROWNIA_SELLER_NAME": "",
     "FAKTUROWNIA_SELLER_TAX_ID": ""
   }
 }
+

@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     description: 'Deletes a price list from Fakturownia.'
 )]
 #[AutoconfigureTag('mcp.tool')]
-final readonly class DeletePriceListTool
+final class DeletePriceListTool
 {
     public function __construct(
         private PricingApiModuleInterface $pricingApiModule,

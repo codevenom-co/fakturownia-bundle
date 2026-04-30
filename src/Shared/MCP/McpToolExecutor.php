@@ -5,7 +5,7 @@ namespace Codevenom\FakturowniaBundle\Shared\MCP;
 use Codevenom\FakturowniaBundle\Shared\MCP\Exception\McpToolException;
 use Codevenom\FakturowniaBundle\Shared\MCP\Response\McpResponder;
 
-final readonly class McpToolExecutor
+final class McpToolExecutor
 {
     public function __construct(
         private McpResponder $responder,

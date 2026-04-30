@@ -6,7 +6,7 @@ namespace Codevenom\FakturowniaBundle\Invoice\MCP\AddInvoice;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class AddInvoiceInput
+final class AddInvoiceInput
 {
     public function __construct(
         #[Assert\Collection(

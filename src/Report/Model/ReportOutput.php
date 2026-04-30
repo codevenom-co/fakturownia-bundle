@@ -2,7 +2,7 @@
 
 namespace Codevenom\FakturowniaBundle\Report\Model;
 
-final readonly class ReportOutput
+final class ReportOutput
 {
     /**
      * @param array{
@@ -36,12 +36,12 @@ final readonly class ReportOutput
      * @param string[] $insights
      */
     public function __construct(
-        public array $meta,
-        public array $definitions,
-        public array $kpis = [],
-        public array $tables = [],
-        public array $timeseries = [],
-        public array $insights = [],
+        public readonly array $meta,
+        public readonly array $definitions,
+        public readonly array $kpis = [],
+        public readonly array $tables = [],
+        public readonly array $timeseries = [],
+        public readonly array $insights = [],
     ) {
     }
 

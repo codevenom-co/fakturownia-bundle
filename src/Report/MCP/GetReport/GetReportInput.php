@@ -4,7 +4,7 @@ namespace Codevenom\FakturowniaBundle\Report\MCP\GetReport;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class GetReportInput
+final class GetReportInput
 {
     /**
      * @param array<string, mixed> $filters

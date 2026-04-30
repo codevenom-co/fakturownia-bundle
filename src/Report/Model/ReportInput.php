@@ -4,7 +4,7 @@ namespace Codevenom\FakturowniaBundle\Report\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class ReportInput
+final class ReportInput
 {
     /**
      * @param array<string, mixed> $filters
@@ -12,21 +12,21 @@ final readonly class ReportInput
      */
     public function __construct(
         #[Assert\NotBlank]
-        public string $reportName,
+        public readonly string $reportName,
 
         #[Assert\Date]
-        public ?string $dateFrom = null,
+        public readonly ?string $dateFrom = null,
 
         #[Assert\Date]
-        public ?string $dateTo = null,
+        public readonly ?string $dateTo = null,
 
-        public ?string $basis = 'issue_date',
+        public readonly ?string $basis = 'issue_date',
 
-        public array $filters = [],
+        public readonly array $filters = [],
 
-        public array $groupBy = [],
+        public readonly array $groupBy = [],
 
-        public ?string $compareTo = null,
+        public readonly ?string $compareTo = null,
     ) {
     }
 }

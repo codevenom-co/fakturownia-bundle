@@ -7,7 +7,7 @@ use Codevenom\FakturowniaBundle\Report\Model\ReportInput;
 use Codevenom\FakturowniaBundle\Report\Model\ReportOutput;
 use Codevenom\FakturowniaBundle\Report\Service\ReportInvoicesService;
 
-final readonly class OverdueQueueReportGeneratorStrategy implements ReportGenerationStrategyInterface
+final class OverdueQueueReportGeneratorStrategy implements ReportGenerationStrategyInterface
 {
     public function __construct(
         private ReportInvoicesService $reportInvoicesService

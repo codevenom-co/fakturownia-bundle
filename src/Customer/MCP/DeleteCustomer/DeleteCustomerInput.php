@@ -4,7 +4,7 @@ namespace Codevenom\FakturowniaBundle\Customer\MCP\DeleteCustomer;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class DeleteCustomerInput
+final class DeleteCustomerInput
 {
     public function __construct(
         #[Assert\NotBlank(message: 'Customer ID is required.')]

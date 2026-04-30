@@ -8,7 +8,7 @@ use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
 use Codevenom\FakturowniaBundle\Invoice\Service\InvoiceService;
 use Codevenom\FakturowniaBundle\Invoice\Dto\InvoiceFilter;
 
-readonly class InvoiceManager implements InvoiceManagerInterface
+class InvoiceManager implements InvoiceManagerInterface
 {
 
     public function __construct(
