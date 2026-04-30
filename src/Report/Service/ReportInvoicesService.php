@@ -6,7 +6,7 @@ use Codevenom\FakturowniaBundle\Invoice\InvoiceApiModuleInterface;
 use Codevenom\FakturowniaBundle\Invoice\Model\Invoice;
 use Codevenom\FakturowniaBundle\Invoice\Dto\InvoiceFilter;
 
-final readonly class ReportInvoicesService
+final class ReportInvoicesService
 {
     public function __construct(
         private InvoiceApiModuleInterface $invoiceApi,

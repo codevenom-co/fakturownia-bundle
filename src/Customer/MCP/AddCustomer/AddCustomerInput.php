@@ -4,7 +4,7 @@ namespace Codevenom\FakturowniaBundle\Customer\MCP\AddCustomer;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class AddCustomerInput
+final class AddCustomerInput
 {
     /**
      * @param array<string, mixed> $client

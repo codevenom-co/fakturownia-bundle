@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     description: 'Create a new invoice in Fakturownia'
 )]
 #[AutoconfigureTag('mcp.tool')]
-final readonly class AddInvoiceTool
+final class AddInvoiceTool
 {
     public function __construct(
         private InvoiceApiModuleInterface  $invoiceApiModule,

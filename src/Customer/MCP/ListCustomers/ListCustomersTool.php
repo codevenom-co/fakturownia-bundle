@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     description: 'Lists all customers from Fakturownia. Supports filtering via query parameters.'
 )]
 #[AutoconfigureTag('mcp.tool')]
-final readonly class ListCustomersTool
+final class ListCustomersTool
 {
     public function __construct(
         private CustomerManagerInterface $customerManager,

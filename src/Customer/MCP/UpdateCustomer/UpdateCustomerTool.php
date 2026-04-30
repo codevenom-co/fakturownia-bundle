@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     description: 'Update an existing customer in Fakturownia'
 )]
 #[AutoconfigureTag('mcp.tool')]
-final readonly class UpdateCustomerTool
+final class UpdateCustomerTool
 {
     public function __construct(
         private CustomerApiModuleInterface $customerApiModule,

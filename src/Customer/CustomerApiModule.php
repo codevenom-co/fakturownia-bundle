@@ -4,7 +4,7 @@ namespace Codevenom\FakturowniaBundle\Customer;
 
 use Codevenom\FakturowniaBundle\Customer\Model\Customer;
 
-final readonly class CustomerApiModule implements CustomerApiModuleInterface
+final class CustomerApiModule implements CustomerApiModuleInterface
 {
     public function __construct(
         private CustomerManagerInterface $customerManager,

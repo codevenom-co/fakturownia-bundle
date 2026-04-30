@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     description: 'Delete a customer from Fakturownia'
 )]
 #[AutoconfigureTag('mcp.tool')]
-final readonly class DeleteCustomerTool
+final class DeleteCustomerTool
 {
     public function __construct(
         private CustomerApiModuleInterface $customerApiModule,

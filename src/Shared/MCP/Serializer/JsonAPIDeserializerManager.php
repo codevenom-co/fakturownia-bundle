@@ -7,7 +7,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final readonly class JsonAPIDeserializerManager
+final class JsonAPIDeserializerManager
 {
     public function __construct(
         private readonly SerializerInterface $serializer,

@@ -2,22 +2,22 @@
 
 namespace Codevenom\FakturowniaBundle\Invoice\Dto;
 
-final readonly class InvoiceFilter
+final class InvoiceFilter
 {
     public function __construct(
-        public ?string $dateFrom = null,
-        public ?string $dateTo = null,
-        public ?string $searchDateType = null,
-        public ?bool $includePositions = null,
-        public ?string $income = null,
-        public ?int $clientId = null,
-        public ?string $kind = null,
+        public readonly ?string $dateFrom = null,
+        public readonly ?string $dateTo = null,
+        public readonly ?string $searchDateType = null,
+        public readonly ?bool $includePositions = null,
+        public readonly ?string $income = null,
+        public readonly ?int $clientId = null,
+        public readonly ?string $kind = null,
         /** @var string[]|null */
-        public ?array $kinds = null,
+        public readonly ?array $kinds = null,
         /** @var int[]|null */
-        public ?array $invoiceIds = null,
-        public ?string $number = null,
-        public ?string $order = null,
+        public readonly ?array $invoiceIds = null,
+        public readonly ?string $number = null,
+        public readonly ?string $order = null,
     ) {
     }
 

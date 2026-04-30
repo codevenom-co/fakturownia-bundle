@@ -6,7 +6,7 @@ namespace Codevenom\FakturowniaBundle\Invoice\Model;
 
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
-final readonly class InvoicePosition
+final class InvoicePosition
 {
     public function __construct(
         private ?string $name = null,

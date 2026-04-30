@@ -5,7 +5,7 @@ namespace Codevenom\FakturowniaBundle\Customer;
 use Codevenom\FakturowniaBundle\Customer\Model\Customer;
 use Codevenom\FakturowniaBundle\Customer\Service\CustomerService;
 
-readonly class CustomerManager implements CustomerManagerInterface
+class CustomerManager implements CustomerManagerInterface
 {
     public function __construct(
         private CustomerService $customerService

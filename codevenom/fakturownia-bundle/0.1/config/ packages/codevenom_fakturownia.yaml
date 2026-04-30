@@ -5,3 +5,4 @@ codevenom_fakturownia:
   seller_tax_id: '%env(default::FAKTUROWNIA_SELLER_TAX_ID)%'
   downloads_path: '%kernel.project_dir%/var/fakturownia'
   timeout: 10
+

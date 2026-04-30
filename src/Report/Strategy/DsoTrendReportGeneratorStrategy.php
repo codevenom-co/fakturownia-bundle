@@ -7,7 +7,7 @@ use Codevenom\FakturowniaBundle\Report\Model\ReportInput;
 use Codevenom\FakturowniaBundle\Report\Model\ReportOutput;
 use Codevenom\FakturowniaBundle\Report\Service\ReportInvoicesService;
 
-final readonly class DsoTrendReportGeneratorStrategy implements ReportGenerationStrategyInterface
+final class DsoTrendReportGeneratorStrategy implements ReportGenerationStrategyInterface
 {
     public function __construct(
         private ReportInvoicesService $reportInvoicesService

@@ -2,7 +2,7 @@
 
 namespace Codevenom\FakturowniaBundle\Customer\MCP\ListCustomers;
 
-final readonly class ListCustomersInput
+final class ListCustomersInput
 {
     /**
      * @param array<string, mixed> $query

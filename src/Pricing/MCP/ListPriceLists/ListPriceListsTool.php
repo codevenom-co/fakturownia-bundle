@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     description: 'Lists all price lists from Fakturownia.'
 )]
 #[AutoconfigureTag('mcp.tool')]
-final readonly class ListPriceListsTool
+final class ListPriceListsTool
 {
     public function __construct(
         private PricingApiModuleInterface $pricingApiModule,

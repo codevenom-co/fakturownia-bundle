@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     description: 'Finds a customer by their ID and returns full customer details.'
 )]
 #[AutoconfigureTag('mcp.tool')]
-final readonly class FindCustomerByIdTool
+final class FindCustomerByIdTool
 {
     public function __construct(
         private CustomerManagerInterface $customerManager,
