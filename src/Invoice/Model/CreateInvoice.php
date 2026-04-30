@@ -73,6 +73,18 @@ class CreateInvoice
         #[SerializedName('copy_invoice_from')]
         private ?int    $copyInvoiceFrom = null,
 
+        #[SerializedName('advance_creation_mode')]
+        private ?string $advanceCreationMode = null,
+
+        #[SerializedName('advance_value')]
+        private ?string $advanceValue = null,
+
+        #[SerializedName('position_name')]
+        private ?string $positionName = null,
+
+        #[SerializedName('invoice_ids')]
+        private ?array  $invoiceIds = null,
+
         #[SerializedName('positions')]
         private array   $positions = [],
     )
@@ -297,6 +309,52 @@ class CreateInvoice
     public function setCopyInvoiceFrom(?int $copyInvoiceFrom): void
     {
         $this->copyInvoiceFrom = $copyInvoiceFrom;
+    }
+
+    public function getAdvanceCreationMode(): ?string
+    {
+        return $this->advanceCreationMode;
+    }
+
+    public function setAdvanceCreationMode(?string $advanceCreationMode): void
+    {
+        $this->advanceCreationMode = $advanceCreationMode;
+    }
+
+    public function getAdvanceValue(): ?string
+    {
+        return $this->advanceValue;
+    }
+
+    public function setAdvanceValue(?string $advanceValue): void
+    {
+        $this->advanceValue = $advanceValue;
+    }
+
+    public function getPositionName(): ?string
+    {
+        return $this->positionName;
+    }
+
+    public function setPositionName(?string $positionName): void
+    {
+        $this->positionName = $positionName;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getInvoiceIds(): ?array
+    {
+        return $this->invoiceIds;
+    }
+
+    /**
+     * @param int[]|null $invoiceIds
+     */
+    public function setInvoiceIds(?array $invoiceIds): void
+    {
+        $this->invoiceIds = $invoiceIds;
     }
 
     public function getPositions(): array

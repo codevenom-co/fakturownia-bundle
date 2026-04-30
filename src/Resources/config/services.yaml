@@ -27,6 +27,7 @@ services:
       - '../../Customer/MCP/'
       - '../../Customer/MCP/*/*Input.php'
       - '../../Pricing/MCP/*/*Input.php'
+      - '../../Invoice/MCP/AddInvoice/AddInvoiceInput.php'
 
 
   Codevenom\FakturowniaBundle\Invoice\MCP\:
