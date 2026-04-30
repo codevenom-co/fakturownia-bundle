@@ -9,18 +9,28 @@ Symfony bundle for the Fakturownia API with built-in MCP tools.
 
 ## What This Gives You
 
-- Fakturownia integration as a standard Symfony service (`FakturowniaClient`).
+- Fakturownia integration as a standard Symfony service (`InvoiceClient`, `CustomerClient`, `PricingClient`).
+- Multi-context architecture (Invoice, Customer, Pricing, Report) for clean domain boundaries.
 - Ready-to-use MCP tools that can be exposed to any AI agent through `symfony/mcp-bundle`.
+- Built-in financial reporting engine with extensible strategies.
 - A single Composer package, without a separate MCP microservice.
 
 ## Available MCP Tools (v1)
 
-- `list_invoices`
-- `get_invoice`
-- `create_invoice`
-- `list_clients`
-- `create_client`
-- `invoice_payment_status`
+| Domain | Tool Name | Description |
+| :--- | :--- | :--- |
+| **Invoices** | `codevenom.fakturownia.invoice.add` | Create a new invoice in Fakturownia. |
+| | `codevenom.fakturownia.invoice.find_by_number` | Finds an invoice by its number. |
+| **Customers** | `codevenom.fakturownia.customer.list` | Lists all customers from Fakturownia. |
+| | `codevenom.fakturownia.customer.find_by_id` | Finds a customer by their ID. |
+| | `codevenom.fakturownia.customer.add` | Add a new customer to Fakturownia. |
+| | `codevenom.fakturownia.customer.update` | Update an existing customer in Fakturownia. |
+| | `codevenom.fakturownia.customer.delete` | Delete a customer from Fakturownia. |
+| **Pricing** | `codevenom.fakturownia.pricing.list` | Lists all price lists from Fakturownia. |
+| | `codevenom.fakturownia.pricing.add` | Adds a new price list to Fakturownia. |
+| | `codevenom.fakturownia.pricing.update` | Updates an existing price list in Fakturownia. |
+| | `codevenom.fakturownia.pricing.delete` | Deletes a price list from Fakturownia. |
+| **Reports** | `codevenom.fakturownia.report.get` | Generates decision-ready financial reports (health, AR aging, cash forecast, DSO trend, etc.). |
 
 ## Requirements
 
@@ -42,6 +52,8 @@ composer require codevenom/fakturownia-bundle symfony/mcp-bundle
 codevenom_fakturownia:
   base_url: '%env(FAKTUROWNIA_BASE_URL)%' # e.g. https://your-subdomain.fakturownia.pl
   api_token: '%env(FAKTUROWNIA_API_TOKEN)%'
+  seller_name: 'Your Company Name'
+  seller_tax_id: 'PL1234567890'
   timeout: 15
 ```
 
@@ -64,9 +76,9 @@ mcp:
 
 ```yaml
 mcp:
-  app: 'shardn'
+  app: 'CHANGE_ME'
   version: '1.0.0'
-  description: 'SHARDN MCP + Fakturownia tools'
+  description: '....'
   client_transports:
     stdio: true
     http: true
@@ -85,7 +97,7 @@ This is the command you register as an MCP server in the client (e.g. Codex/VS C
 ```json
 {
   "mcpServers": {
-    "shardn-fakturownia": {
+    "codevenom-fakturownia": {
       "command": "php",
       "args": ["/abs/path/to/project/bin/console", "mcp:server"],
       "env": {
@@ -103,7 +115,12 @@ This is the command you register as an MCP server in the client (e.g. Codex/VS C
 `symfony/mcp-bundle` discovers capabilities via attributes (`#[McpTool]`).
 In most setups, it is enough that the attributed service is loaded by the container.
 
-If vendor capabilities are not automatically discovered in your app, add a small bridge class in the app `src/` that delegates to `Codevenom\\FakturowniaBundle\\Mcp\\FakturowniaMcpTools`.
+If vendor capabilities are not automatically discovered in your app, ensure that the bundle services are correctly imported in your `services.yaml`:
+
+```yaml
+imports:
+    - { resource: '@CodevenomFakturowniaBundle/Resources/config/services.yaml' }
+```
 
 ## Product Strategy
 
@@ -112,3 +129,14 @@ This package is both a library and MCP integration:
 - as MCP: you expose the same use cases to AI agents through the MCP standard.
 
 This lets you deploy the bundle in SHARDN while also publishing it as a public CODEVENOM OSS package.
+
+
+## Development
+
+If you have Docker and [Task](https://taskfile.dev/) installed, you can easily run tests and tools:
+
+```bash
+task install
+task test
+task cs-fix
+```

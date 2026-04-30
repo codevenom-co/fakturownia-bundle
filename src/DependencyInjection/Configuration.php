@@ -15,22 +15,14 @@ final class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
-                ->scalarNode('base_url')
-                    ->info('Pelny URL konta Fakturownia, np. https://twojadomena.fakturownia.pl')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('api_token')
-                    ->info('Kod autoryzacyjny API z ustawien Fakturowni')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-                ->end()
-                ->integerNode('timeout')
-                    ->info('Timeout HTTP w sekundach')
-                    ->defaultValue(15)
-                    ->min(1)
-                ->end()
-            ->end();
+            ->scalarNode('base_url')->cannotBeEmpty()->end()
+            ->scalarNode('api_token')->cannotBeEmpty()->end()
+            ->scalarNode('seller_name')->defaultValue('')->end()
+            ->scalarNode('seller_tax_id')->defaultValue('')->end()
+            ->scalarNode('downloads_path')->defaultValue('%kernel.project_dir%/var/fakturownia')->end()
+            ->integerNode('timeout')->min(1)->defaultValue(10)->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }
